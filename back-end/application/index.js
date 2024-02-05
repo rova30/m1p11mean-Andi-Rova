@@ -1,22 +1,19 @@
-const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = "mongodb+srv://webavanceem1:final@clusterm1.kqgspnb.mongodb.net/?retryWrites=true&w=majority";
+const express = require('express')
+const bodyParser= require('body-parser')
+const app = express()
+const MongoClient = require('mongodb').MongoClient
 
 
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  }
-});
 
-async function run() {
-  try {
-    await client.connect();
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } finally {
-    await client.close();
-  }
-}
-run().catch(console.dir);
+const connectionString = 'mongodb+srv://webavanceem1:final@clusterm1.kqgspnb.mongodb.net/?retryWrites=true&w=majority'
+
+MongoClient.connect(connectionString, { useUnifiedTopology: true })
+  .then(client => {
+    console.log('Connected to Database')
+    const db = client.db('star-wars-1')
+    const quotesCollection = db.collection('quotes')
+    app.listen(3000, function() {
+    console.log('listening on 3000')
+    })
+})
+.catch(console.error)
