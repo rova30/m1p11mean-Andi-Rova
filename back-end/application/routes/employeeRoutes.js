@@ -47,4 +47,30 @@ router.get('/allEmployees', async (req, res) => {
   }
 });
 
+router.put('/updateEmployee/:id', async (req, res) => {
+    try {
+      const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
+      const db = client.db('finalexam');
+  
+      const employeeId = req.params.id;
+      const { firstName, lastName, address, contact, email, password, speciality } = req.body;
+  
+      const filter = { _id: ObjectId(employeeId) };
+      const update = { $set: { firstName, lastName, address, contact, email, password, speciality } };
+  
+      const result = await db.collection('Employee').updateOne(filter, update);
+  
+      if (result.modifiedCount === 1) {
+        res.json({ message: 'Employee updated successfully' });
+      } else {
+        res.status(404).json({ error: 'Employee not found or no changes made' });
+      }
+  
+      client.close();
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error updating employee' });
+    }
+  });
+
 module.exports = router;
