@@ -14,7 +14,7 @@ router.post('/addEmployee', async (req, res) => {
     if (!req.body) {
       return res.status(400).json({ error: 'Request body is missing or invalid' });
     }
-    const { firstName, lastName, address, contact, email, password, speciality } = req.body;
+    const { firstName, lastName, address, contact, email, password, speciality, photo } = req.body;
     const newEmployee = {
       firstName,
       lastName,
@@ -22,7 +22,8 @@ router.post('/addEmployee', async (req, res) => {
       contact,
       email,
       password,
-      speciality
+      speciality,
+      photo
     };
     const result = await db.collection('Employee').insertOne(newEmployee);
     res.json({ message: 'Employee added successfully' });
