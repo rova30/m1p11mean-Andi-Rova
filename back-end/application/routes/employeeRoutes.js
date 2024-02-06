@@ -53,10 +53,10 @@ router.put('/updateEmployee/:id', async (req, res) => {
       const db = client.db('finalexam');
   
       const employeeId = req.params.id;
-      const { firstName, lastName, address, contact, email, password, speciality } = req.body;
+      const { firstName, lastName, address, contact, email, password, speciality, photo } = req.body;
   
       const filter = { _id: ObjectId(employeeId) };
-      const update = { $set: { firstName, lastName, address, contact, email, password, speciality } };
+      const update = { $set: { firstName, lastName, address, contact, email, password, speciality, photo } };
   
       const result = await db.collection('Employee').updateOne(filter, update);
   
