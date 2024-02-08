@@ -1,0 +1,30 @@
+/* Style du spinner */
+.spinner {
+    /* Ajoutez ici le style du spinner, par exemple, utilisez une bibliothèque d'icônes ou un GIF animé */
+  }
+  
+  /* Style des modals */
+  .modal {
+    display: none;
+    /* Ajoutez ici le style du modal, par exemple, positionnez-le au centre de la page */
+  }
+  
+  .modal.success {
+    /* Ajoutez ici le style spécifique du modal de succès */
+  }
+  
+  .modal.error {
+    /* Ajoutez ici le style spécifique du modal d'erreur */
+  }
+  
+  .spinner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8); /* Fond semi-transparent */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }

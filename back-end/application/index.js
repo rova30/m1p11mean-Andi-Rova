@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const app = express();
 const port = 3000;
 
@@ -9,12 +10,13 @@ const employeeRoutes = require('./routes/employeeRoutes');
 const specialOfferRoutes = require('./routes/specialOfferRoutes');
 const preferenceRoutes = require('./routes/preferenceRoutes');
 
-app.use('/api/customers', customerRoutes);
-app.use('/api/expenses', expensesRoutes);
-app.use('/api/services', serviceRoutes);
-app.use('/api/employees', employeeRoutes);
-app.use('/api/specialOffers', specialOfferRoutes);
-app.use('/api/preferences', preferenceRoutes);
+app.use(cors());
+app.use('/customers', customerRoutes);
+app.use('/expenses', expensesRoutes);
+app.use('/services', serviceRoutes);
+app.use('/employees', employeeRoutes);
+app.use('/specialOffers', specialOfferRoutes);
+app.use('/preferences', preferenceRoutes);
 
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);

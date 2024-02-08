@@ -4,7 +4,7 @@
     <div class="container">
         <div class="col-md-4 content-center">
             <div class="card card-signin card-plain">
-                <form class="form" method="" action="">
+                <form class="form" method="post" action="POST" (ngSubmit)="onSubmit()">
                     <div class="header header-primary text-center">
                         <div class="logo-container">
                             <img src="assets/img/logo-r&a.png" alt="">
@@ -15,17 +15,17 @@
                             <div class="col-lg-6">
                                 <div class="input-group form-group-no-border input-lg" [ngClass]="{'input-group-focus':focus===true}">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text">  <i class="now-ui-icons ui-1_email-85"></i></span>
+                                        <span class="input-group-text">  <i class="now-ui-icons users_single-02"></i></span>
                                     </div>
-                                      <input type="text" class="form-control" placeholder="Nom" (focus)="focus=true" (blur)="focus=false" >
+                                      <input type="text" class="form-control" [(ngModel)]="customer.lastname" name="lastname" placeholder="Nom" (focus)="focus=true" (blur)="focus=false" >
                                   </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="input-group form-group-no-border input-lg" [ngClass]="{'input-group-focus':focus===true}">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text">  <i class="now-ui-icons ui-1_email-85"></i></span>
+                                        <span class="input-group-text">  <i class="now-ui-icons users_single-02"></i></span>
                                     </div>
-                                      <input type="text" class="form-control" placeholder="Prénom" (focus)="focus=true" (blur)="focus=false" >
+                                      <input type="text" class="form-control" [(ngModel)]="customer.firstname" name="firstname" placeholder="Prénom" (focus)="focus=true" (blur)="focus=false" >
                                   </div>
                             </div>
                         </div>
@@ -33,9 +33,9 @@
                             <div class="col-lg-6">
                                 <div class="input-group form-group-no-border input-lg" [ngClass]="{'input-group-focus':focus===true}">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text">  <i class="now-ui-icons ui-1_email-85"></i></span>
+                                        <span class="input-group-text">  <i class="now-ui-icons tech_mobile"></i></span>
                                     </div>
-                                      <input type="tel" class="form-control" placeholder="Contact" (focus)="focus=true" (blur)="focus=false" >
+                                      <input type="tel" class="form-control" [(ngModel)]="customer.contact" name="contact" placeholder="Contact" (focus)="focus=true" (blur)="focus=false" >
                                   </div>
                             </div>
                             <div class="col-lg-6">
@@ -43,7 +43,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">  <i class="now-ui-icons ui-1_email-85"></i></span>
                                     </div>
-                                      <input type="email" class="form-control" placeholder="Email" (focus)="focus=true" (blur)="focus=false" >
+                                      <input type="email" class="form-control" [(ngModel)]="customer.email" name="email" placeholder="Email" (focus)="focus=true" (blur)="focus=false" >
                                   </div>
                             </div>
                         </div>
@@ -51,16 +51,31 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="now-ui-icons objects_key-25"></i></span>
                         </div>
-                          <input type="password" placeholder="Mot de passe" class="form-control" (focus)="focus1=true" (blur)="focus1=false"/>
+                          <input type="password" placeholder="Mot de passe" [(ngModel)]="customer.password" name="password" class="form-control" (focus)="focus1=true" (blur)="focus1=false"/>
                       </div>
 
                     </div>
                     <div class="footer text-center">
-                        <a href="#pablo" class="btn btn-primary btn-round btn-lg btn-block">S'inscrire</a>
+                        <button type="submit" class="btn btn-primary btn-round btn-lg btn-block">S'inscrire</button>  
                     </div>
+                    <!-- Spinner de chargement -->
+                    <div *ngIf="loading" class="spinner-overlay">
+                        <mat-spinner diameter="50" color="accent"></mat-spinner>
+                    </div>
+                    <!-- Modal de succès -->
+                    <div *ngIf="showSuccess" class="modal success">
+                    <!-- Contenu du modal de succès -->
+                    <p>Opération réussie !</p>
+                    </div>
+
+                    <!-- Modal d'erreur -->
+                    <div *ngIf="showError" class="modal error">
+                    <!-- Contenu du modal d'erreur -->
+                    <p>Une erreur s'est produite.</p>
+                    </div> 
                     <div class="pull-left">
                         <h6>
-                            <a href="#pablo" class="link">Vous avez déjà un compte ?</a>
+                            <a href="/login" class="link">Vous avez déjà un compte ?</a>
                         </h6>
                     </div>
                 </form>

@@ -7,7 +7,7 @@ const connectionString = 'mongodb+srv://webavanceem1:final@clusterm1.kqgspnb.mon
 
 router.use(bodyParser.json());
 // tout ce qui est rattaché au customer
-router.post('/addCustomer', async (req, res) => {
+router.post('/signin', async (req, res) => {
   try {
     const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
     const db = client.db('finalexam');
@@ -24,7 +24,7 @@ router.post('/addCustomer', async (req, res) => {
       virtualWallet
     };
     const result = await db.collection('Customers').insertOne(newCustomer);
-    res.json({ message: 'Customer added successfully' });
+    res.json({ message: 'Inscription réussie' });
     client.close();
   } catch (error) {
     console.error(error);
