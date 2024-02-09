@@ -11,6 +11,7 @@ import { NavbarComponent } from './shared/navbar/navbar.component';
 import { AuthService } from './api/auth.service';
 import { HttpClientModule } from '@angular/common/http';
 
+
 @NgModule({
     declarations: [
         AppComponent,
