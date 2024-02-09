@@ -10,6 +10,8 @@ import { AppComponent } from './app.component';
 import { NavbarComponent } from './shared/navbar/navbar.component';
 import { AuthService } from './api/auth.service';
 import { HttpClientModule } from '@angular/common/http';
+import { AuthModule } from './auth/auth.module';
+
 
 @NgModule({
     declarations: [
@@ -24,7 +26,8 @@ import { HttpClientModule } from '@angular/common/http';
         HttpClientModule,
         AppRoutingModule,
         ComponentsModule,
-        ExamplesModule
+        ExamplesModule,
+        AuthModule
     ],
     providers: [AuthService],
     bootstrap: [AppComponent]

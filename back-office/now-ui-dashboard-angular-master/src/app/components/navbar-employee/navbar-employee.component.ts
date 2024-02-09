@@ -1,15 +1,15 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
-import { ROUTES } from '../sidebar/sidebar.component';
+import { ROUTES } from '../sidebar-employee/sidebar-employee.component';
 import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
 import { Router } from '@angular/router';
 import Chart from 'chart.js';
 
 @Component({
-  selector: 'app-navbar',
-  templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css']
+  selector: 'app-navbar-employee',
+  templateUrl: './navbar-employee.component.html',
+  styleUrls: ['./navbar-employee.component.css']
 })
-export class NavbarComponent implements OnInit {
+export class NavbarEmployeeComponent implements OnInit {
     private listTitles: any[];
     location: Location;
       mobile_menu_visible: any = 0;

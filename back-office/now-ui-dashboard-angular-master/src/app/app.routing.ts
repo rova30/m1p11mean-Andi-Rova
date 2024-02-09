@@ -4,11 +4,13 @@ import { BrowserModule  } from '@angular/platform-browser';
 import { Routes, RouterModule } from '@angular/router';
 
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
+import { EmployeeLayoutComponent } from './layouts/employee-layout/employee-layout.component';
+import { PageNotFoundComponent } from './error/404/page-not-found.component';
 
 const routes: Routes =[
   {
-    path: '',
-    redirectTo: 'dashboard',
+    path: 'manager',
+    redirectTo: 'page-not-found',
     pathMatch: 'full',
   }, {
     path: '',
@@ -19,10 +21,23 @@ const routes: Routes =[
       loadChildren: () => import('./layouts/admin-layout/admin-layout.module').then(x=>x.AdminLayoutModule)
   }]},
   {
+    path: 'employee',
+    redirectTo: 'page-not-found',
+    pathMatch: 'full',
+  }, {
+    path: '',
+    component: EmployeeLayoutComponent,
+    children: [
+        {
+      path: '',
+      loadChildren: () => import('./layouts/employee-layout/employee-layout.module').then(x=>x.EmployeeLayoutModule)
+  }]},
+  {
     path: '**',
-    redirectTo: 'dashboard'
+    component: PageNotFoundComponent,
   }
 ];
+
 
 @NgModule({
   imports: [

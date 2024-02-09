@@ -2,17 +2,17 @@ import {filter} from 'rxjs/operators';
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { Location, LocationStrategy, PathLocationStrategy, PopStateEvent } from '@angular/common';
 
-import { NavbarComponent } from '../../components/navbar/navbar.component';
+import { NavbarEmployeeComponent } from '../../components/navbar-employee/navbar-employee.component';
 import { Router, NavigationEnd, NavigationStart } from '@angular/router';
 import { Subscription ,  Observable } from 'rxjs';
 import PerfectScrollbar from 'perfect-scrollbar';
 
 @Component({
-  selector: 'app-admin-layout',
-  templateUrl: './admin-layout.component.html',
-  styleUrls: ['./admin-layout.component.scss']
+  selector: 'app-employee-layout',
+  templateUrl: './employee-layout.component.html',
+  styleUrls: ['./employee-layout.component.scss']
 })
-export class AdminLayoutComponent implements OnInit {
+export class EmployeeLayoutComponent implements OnInit {
   private _router: Subscription;
   private lastPoppedUrl: string;
   private yScrollStack: number[] = [];

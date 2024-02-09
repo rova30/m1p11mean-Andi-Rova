@@ -6,18 +6,12 @@
     .author{
         text-align: center;
         text-transform: none;
-        margin-top: -77px;
-
-        a +  p.description{
-            margin-top: -7px;
-        }
     }
 
     .avatar{
-        width: 124px;
-        height: 124px;
+        width: 82px;
+        height: 82px;
         border: 1px solid $white-color;
-        position: relative;
     }
 
     .card-body{

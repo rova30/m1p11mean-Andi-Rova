@@ -1,21 +1,26 @@
 import { Routes } from '@angular/router';
 
-import { DashboardComponent } from '../../dashboard/dashboard.component';
-import { UserProfileComponent } from '../../user-profile/user-profile.component';
-import { TableListComponent } from '../../table-list/table-list.component';
-import { TypographyComponent } from '../../typography/typography.component';
-import { IconsComponent } from '../../icons/icons.component';
-import { MapsComponent } from '../../maps/maps.component';
-import { NotificationsComponent } from '../../notifications/notifications.component';
-import { UpgradeComponent } from '../../upgrade/upgrade.component';
+import { DashboardComponent } from '../../manager/dashboard/dashboard.component';
+import { UserProfileComponent } from '../../manager/user-profile/user-profile.component';
+import { TableListComponent } from '../../manager/table-list/table-list.component';
+import { TypographyComponent } from '../../manager/typography/typography.component';
+import { IconsComponent } from '../../manager/icons/icons.component';
+import { MapsComponent } from '../../manager/maps/maps.component';
+import { NotificationsComponent } from '../../manager/notifications/notifications.component';
+import { UpgradeComponent } from '../../manager/upgrade/upgrade.component';
+import { EmployeeComponent } from '../../manager/employee/employee.component';
+import { CustomerComponent } from '../../manager/customer/customer.component';
 
 export const AdminLayoutRoutes: Routes = [
-    { path: 'dashboard',      component: DashboardComponent },
-    { path: 'user-profile',   component: UserProfileComponent },
-    { path: 'table-list',     component: TableListComponent },
-    { path: 'typography',     component: TypographyComponent },
-    { path: 'icons',          component: IconsComponent },
-    { path: 'maps',           component: MapsComponent },
-    { path: 'notifications',  component: NotificationsComponent },
-    { path: 'upgrade',        component: UpgradeComponent }
+    { path: 'manager/dashboard',      component: DashboardComponent },
+    { path: 'manager/user-profile',   component: UserProfileComponent },
+    { path: 'manager/table-list',     component: TableListComponent },
+    { path: 'manager/service',     component: TableListComponent },
+    { path: 'manager/customer',     component: CustomerComponent },
+    { path: 'manager/employee',     component: EmployeeComponent },
+    { path: 'manager/typography',     component: TypographyComponent },
+    { path: 'manager/icons',          component: IconsComponent },
+    { path: 'manager/maps',           component: MapsComponent },
+    { path: 'manager/notifications',  component: NotificationsComponent },
+    { path: 'manager/upgrade',        component: UpgradeComponent }
 ];

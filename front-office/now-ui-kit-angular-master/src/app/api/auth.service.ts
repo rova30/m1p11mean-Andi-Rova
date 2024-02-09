@@ -20,10 +20,9 @@ export class AuthService {
         return response;
       }),
       catchError((error) => {
-        // Traitez l'erreur ici
         console.error('Erreur lors de la demande :', error);
         throw error;
       })
     );
-    }
+  }
 }

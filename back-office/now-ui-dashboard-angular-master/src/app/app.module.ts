@@ -12,6 +12,8 @@ import { ComponentsModule } from './components/components.module';
 import { AppComponent } from './app.component';
 
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
+import { EmployeeLayoutComponent } from './layouts/employee-layout/employee-layout.component';
+import { PageNotFoundComponent } from './error/404/page-not-found.component';
 
 @NgModule({
   imports: [
@@ -26,10 +28,12 @@ import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.compon
   ],
   declarations: [
     AppComponent,
-    AdminLayoutComponent
-
+    AdminLayoutComponent,
+    EmployeeLayoutComponent,
+    PageNotFoundComponent
   ],
-  providers: [],
+  providers: [
+  ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

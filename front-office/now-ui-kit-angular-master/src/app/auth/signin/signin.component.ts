@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
   templateUrl: './signin.component.html',
   styleUrls: ['./signin.component.scss']
 })
+
 export class SignInComponent implements OnInit {
 
     data : Date = new Date();
@@ -33,7 +34,6 @@ export class SignInComponent implements OnInit {
         .subscribe(
             (response) => {
                 this.loading = false;
-
                 Swal.fire({
                     icon: 'success',
                     title: response.message,
@@ -64,6 +64,7 @@ export class SignInComponent implements OnInit {
         var body = document.getElementsByTagName('body')[0];
         body.classList.add('signin-page');
     }
+
     ngOnDestroy(){
         var body = document.getElementsByTagName('body')[0];
         body.classList.remove('signin-page');
