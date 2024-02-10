@@ -42,10 +42,32 @@ router.get('/allEmployees', async (req, res) => {
 
     const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
     const db = client.db('finalexam');
+
+    // Requête pour récupérer les employés avec les noms de spécialité correspondants
     const employees = await db.collection('Employee')
-                               .find({})
-                               .skip(skip)
-                               .limit(pageSize)
+                               .aggregate([
+                                  { $skip: skip },
+                                  { $limit: pageSize },
+                                  { 
+                                    $lookup: {
+                                      from: 'Service',
+                                      localField: 'speciality',
+                                      foreignField: '_id',
+                                      as: 'specialities'
+                                    }
+                                  },
+                                  {
+                                    $project: {
+                                      firstName: 1,
+                                      lastName: 1,
+                                      address: 1,
+                                      contact: 1,
+                                      email: 1,
+                                      photo: 1,
+                                      'specialities.name': 1 
+                                    }
+                                  }
+                               ])
                                .toArray();
 
     res.json(employees);
@@ -55,6 +77,7 @@ router.get('/allEmployees', async (req, res) => {
     res.status(500).json({ error: 'Error fetching employees' });
   }
 });
+
 
 
 

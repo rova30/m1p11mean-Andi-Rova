@@ -44,6 +44,12 @@
                       <h5 class="title">{{ employee.firstName }} {{ employee.lastName }}</h5>
                     </a>
                   </div>
+                  
+                    <strong>Spécialités:</strong>
+                    <ul>
+                      <li *ngFor="let speciality of employee.specialities">{{ speciality.name }}</li>
+                    </ul>
+                  
                   <p class="description text-center">
                     {{ employee.address }}
                     <br>
