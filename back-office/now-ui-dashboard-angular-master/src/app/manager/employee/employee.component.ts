@@ -9,7 +9,6 @@ import { EmployeeService } from '../../api/employee.service';
 
 export class EmployeeComponent implements OnInit {
   employees: any[] = [];
-  loading: boolean = false;
   error: string = '';
   currentPage: number = 1; 
   totalPages: number = 0; 
