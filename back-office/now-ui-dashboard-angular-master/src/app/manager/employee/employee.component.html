@@ -5,12 +5,10 @@
       <div class="card">
         <div class="card-header">
           <h4 class="card-title">Liste des employés</h4>
-          <!-- Button trigger modal -->
           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newEmployeeModal">
             Nouvel employé
           </button>
 
-          <!-- Modal -->
           <div class="modal fade" id="newEmployeeModal" tabindex="-1" role="dialog" aria-labelledby="newEmployeeModalLabel"
             aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -22,7 +20,7 @@
                   </button>
                 </div>
                 <div class="modal-body">
-                  <!-- Form for adding new employee -->
+
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -44,7 +42,7 @@
                       <h5 class="title">{{ employee.firstName }} {{ employee.lastName }}</h5>
                     </a>
                   </div>
-                  
+
                     <strong>Spécialités:</strong>
                     <ul>
                       <li *ngFor="let speciality of employee.specialities">{{ speciality.name }}</li>
@@ -61,7 +59,6 @@
               </div>
             </div>
           </div>
-          <!-- Pagination controls -->
           <div class="row">
             <div class="col-md-12">
               <nav aria-label="Page navigation">
