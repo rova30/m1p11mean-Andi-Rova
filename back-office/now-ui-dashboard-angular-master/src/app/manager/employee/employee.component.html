@@ -1,18 +1,18 @@
-<div class="panel-header panel-header-sm">
-</div>
+<div class="panel-header panel-header-sm"></div>
 <div class="main-content">
   <div class="row">
     <div class="col-md-12">
       <div class="card">
         <div class="card-header">
           <h4 class="card-title">Liste des employés</h4>
-        <!-- Button trigger modal -->
+          <!-- Button trigger modal -->
           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newEmployeeModal">
             Nouvel employé
           </button>
 
           <!-- Modal -->
-          <div class="modal fade" id="newEmployeeModal" tabindex="-1" role="dialog" aria-labelledby="newEmployeeModalLabel" aria-hidden="true">
+          <div class="modal fade" id="newEmployeeModal" tabindex="-1" role="dialog" aria-labelledby="newEmployeeModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
@@ -22,7 +22,7 @@
                   </button>
                 </div>
                 <div class="modal-body">
-                  ...
+                  <!-- Form for adding new employee -->
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -31,69 +31,46 @@
               </div>
             </div>
           </div>
-          
+
         </div>
         <div class="card-body">
           <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-4" *ngFor="let employee of employees">
               <div class="card card-user">
                 <div class="card-body">
                   <div class="author">
                     <a href="#">
-                      <img class="avatar border-gray" src="../assets/img/mike.jpg" alt="...">
-                      <h5 class="title">Mike Andrew</h5>
+                      <img class="avatar border-gray" [src]="employee.photo" alt="...">
+                      <h5 class="title">{{ employee.firstName }} {{ employee.lastName }}</h5>
                     </a>
-                    <p class="description">
-                      michael24
-                    </p>
                   </div>
                   <p class="description text-center">
-                    "Lamborghini Mercy
-                    <br> Your chick she so thirsty
-                    <br> I'm in that two seat Lambo"
+                    {{ employee.address }}
+                    <br>
+                    {{ employee.contact }}
+                    <br>
+                    {{ employee.email }}
                   </p>
                 </div>
               </div>
             </div>
-            <div class="col-md-4">
-              <div class="card card-user">
-                <div class="card-body">
-                  <div class="author">
-                    <a href="#">
-                      <img class="avatar border-gray" src="../assets/img/mike.jpg" alt="...">
-                      <h5 class="title">Mike Andrew</h5>
-                    </a>
-                    <p class="description">
-                      michael24
-                    </p>
-                  </div>
-                  <p class="description text-center">
-                    "Lamborghini Mercy
-                    <br> Your chick she so thirsty
-                    <br> I'm in that two seat Lambo"
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="card card-user">
-                <div class="card-body">
-                  <div class="author">
-                    <a href="#">
-                      <img class="avatar border-gray" src="../assets/img/mike.jpg" alt="...">
-                      <h5 class="title">Mike Andrew</h5>
-                    </a>
-                    <p class="description">
-                      michael24
-                    </p>
-                  </div>
-                  <p class="description text-center">
-                    "Lamborghini Mercy
-                    <br> Your chick she so thirsty
-                    <br> I'm in that two seat Lambo"
-                  </p>
-                </div>
-              </div>
+          </div>
+          <!-- Pagination controls -->
+          <div class="row">
+            <div class="col-md-12">
+              <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                  <li class="page-item">
+                    <button class="page-link" (click)="prevPage()">Précédent</button>
+                  </li>
+                  <li class="page-item disabled">
+                    <span class="page-link">{{ currentPage }} / {{ totalPages }}</span>
+                  </li>
+                  <li class="page-item">
+                    <button class="page-link" (click)="nextPage()">Suivant</button>
+                  </li>
+                </ul>
+              </nav>
             </div>
           </div>
         </div>

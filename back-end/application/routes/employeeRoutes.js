@@ -36,9 +36,18 @@ router.post('/addEmployee', async (req, res) => {
 
 router.get('/allEmployees', async (req, res) => {
   try {
+    const page = parseInt(req.query.page) || 1; 
+    const pageSize = parseInt(req.query.pageSize) || 10; 
+    const skip = (page - 1) * pageSize;
+
     const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
     const db = client.db('finalexam');
-    const employees = await db.collection('Employee').find({}).toArray();
+    const employees = await db.collection('Employee')
+                               .find({})
+                               .skip(skip)
+                               .limit(pageSize)
+                               .toArray();
+
     res.json(employees);
     client.close();
   } catch (error) {
@@ -46,6 +55,8 @@ router.get('/allEmployees', async (req, res) => {
     res.status(500).json({ error: 'Error fetching employees' });
   }
 });
+
+
 
 router.put('/updateEmployee/:id', async (req, res) => {
     try {
