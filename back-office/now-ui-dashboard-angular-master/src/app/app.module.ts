@@ -14,6 +14,8 @@ import { AppComponent } from './app.component';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 import { EmployeeLayoutComponent } from './layouts/employee-layout/employee-layout.component';
 import { PageNotFoundComponent } from './error/404/page-not-found.component';
+import { LoginManagerComponent } from './manager/login/login.component';
+import { LoginEmployeeComponent } from './employee/login/login.component';
 
 @NgModule({
   imports: [
@@ -30,7 +32,10 @@ import { PageNotFoundComponent } from './error/404/page-not-found.component';
     AppComponent,
     AdminLayoutComponent,
     EmployeeLayoutComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    LoginManagerComponent,
+    LoginEmployeeComponent
+    
   ],
   providers: [
   ],

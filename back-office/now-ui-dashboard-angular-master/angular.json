@@ -19,7 +19,8 @@
             "allowedCommonJsDependencies": ["hammerjs", "chart.js"],
             "assets": [
               "src/assets",
-              "src/favicon.ico"
+              "src/favicon.ico",
+              "src/fonts"
             ],
             "styles": [
               "node_modules/perfect-scrollbar/css/perfect-scrollbar.css",

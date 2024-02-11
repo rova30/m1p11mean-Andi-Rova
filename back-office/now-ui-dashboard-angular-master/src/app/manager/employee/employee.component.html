@@ -20,67 +20,49 @@
                   </button>
                 </div>
                 <div class="modal-body">
-                  <h5>Information de base</h5>
+                  <h6>Information de base</h6>
                   <div class="row">
                     <div class="col-lg-6">
-                        <div class="input-group form-group-no-border input-lg">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">  <i class="now-ui-icons users_single-02"></i></span>
-                            </div>
+                        <div class="input-group form-group-no-border input-md">
                               <input type="text" class="form-control"  name="lastname" placeholder="Nom">
                           </div>
                     </div>
                     <div class="col-lg-6">
-                        <div class="input-group form-group-no-border input-lg">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">  <i class="now-ui-icons users_single-02"></i></span>
-                            </div>
+                        <div class="input-group form-group-no-border input-md">
                               <input type="text" class="form-control"  name="firstname" placeholder="Prénoms">
                           </div>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-lg-6">
-                        <div class="input-group form-group-no-border input-lg">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">  <i class="now-ui-icons users_single-02"></i></span>
-                            </div>
+                        <div class="input-group form-group-no-border input-md">
                               <input type="text" class="form-control"  name="adress" placeholder="Adresse">
                           </div>
                     </div>
                     <div class="col-lg-6">
-                        <div class="input-group form-group-no-border input-lg">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">  <i class="now-ui-icons users_single-02"></i></span>
-                            </div>
+                        <div class="input-group form-group-no-border input-md">
                               <input type="text" class="form-control"  name="contact" placeholder="Contact">
                           </div>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-lg-6">
-                        <div class="input-group form-group-no-border input-lg">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">  <i class="now-ui-icons users_single-02"></i></span>
-                            </div>
+                        <div class="input-group form-group-no-border input-md">
                               <input type="text" class="form-control"  name="email" placeholder="Email">
                           </div>
                     </div>
                     <div class="col-lg-6">
-                        <div class="input-group form-group-no-border input-lg">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">  <i class="now-ui-icons users_single-02"></i></span>
-                            </div>
+                        <div class="input-group form-group-no-border input-md">
                               <input type="password" class="form-control"  name="password" placeholder="Mot de passe">
                           </div>
                     </div>
                   </div>
-                  <h5>Photo de profil</h5>
+                  <h6>Photo de profil</h6>
                     <input type="file" name="" id="">
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary">Save changes</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                  <button type="button" class="btn btn-primary">Enregistrer</button>
                 </div>
               </div>
             </div>
@@ -88,6 +70,11 @@
 
         </div>
         <div class="card-body">
+          <div *ngIf="loading" class="text-center mt-3">
+            <div class="spinner-border" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
           <div class="row">
             <div class="col-md-4" *ngFor="let employee of employees">
               <div class="card card-user">
@@ -98,13 +85,9 @@
                       <h5 class="title">{{ employee.firstName }} {{ employee.lastName }}</h5>
                     </a>
                   </div>
+                  <p class="text-center"><span class="badge badge-primary" style="margin-left: 5px ;" *ngFor="let speciality of employee.specialities">{{ speciality.name }}</span></p>
 
-                    <strong>Spécialités:</strong>
-                    <ul>
-                      <li *ngFor="let speciality of employee.specialities">{{ speciality.name }}</li>
-                    </ul>
-                  
-                  <p class="description text-center">
+                  <p class="text-center">
                     {{ employee.address }}
                     <br>
                     {{ employee.contact }}
@@ -116,7 +99,7 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12" *ngIf="!loading">
               <nav aria-label="Page navigation">
                 <ul class="pagination justify-content-center">
                   <li class="page-item">

@@ -12,6 +12,7 @@ export class EmployeeComponent implements OnInit {
   error: string = '';
   currentPage: number = 1; 
   totalPages: number = 0; 
+  loading: boolean = false;
 
   constructor(private employeeService: EmployeeService) { }
 
@@ -21,16 +22,19 @@ export class EmployeeComponent implements OnInit {
 
   getEmployees(page: number, pageSize: number) {
     this.error = ''; 
+    this.loading = true;
 
     this.employeeService.getEmployees(page, pageSize).subscribe(
       (data: any[]) => {
         this.employees = data;
         this.currentPage = page; 
         this.totalPages = Math.ceil(data.length / pageSize);
+        this.loading = false;
       },
       (error: any) => {
         console.error('Error fetching employees:', error);
         this.error = 'Error fetching employees'; 
+        this.loading = false;
       }
     );
   }

@@ -1,0 +1,38 @@
+<div class="section section-signup" style="background-image: url('../../../assets/img/header-3.png'); background-size: cover; background-position: top center;">
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5);"></div>
+    <div class="container login-page">
+      <div class="row">
+        <div class="col-md-4 mx-auto">
+            <div class="card card-login">
+                <div class="card-header">
+                  <h5 class="title">Bienvenue!</h5>
+                </div>
+                <div class="card-body">
+                  <form>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label>Email</label>
+                          <input type="email" class="form-control" placeholder="Email" value="">
+                        </div>
+                      </div>
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label>Mot de passe</label>
+                          <input type="password" class="form-control" placeholder="********" value="">
+                        </div>
+                      </div>
+                      <div class="col-md-12">
+                        <button type="submit" class="btn btn-primary btn-round btn-lg btn-block">Se connecter en tant que manager</button>  
+                      </div>
+                      <div class="col-md-12" style="text-align: center;">
+                        <a [routerLink]="['/employee/login']" class="btn btn-simple btn-round btn-lg btn-block">Vous n'êtes pas un manager ?</a>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+      </div>
+    </div>
+</div>

@@ -6,8 +6,22 @@ import { Routes, RouterModule } from '@angular/router';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 import { EmployeeLayoutComponent } from './layouts/employee-layout/employee-layout.component';
 import { PageNotFoundComponent } from './error/404/page-not-found.component';
+import { LoginManagerComponent } from './manager/login/login.component';
+import { LoginEmployeeComponent } from './employee/login/login.component';
 
 const routes: Routes =[
+  {
+    path: '',
+    component: LoginEmployeeComponent,
+  },
+  {
+    path: 'manager/login',
+    component: LoginManagerComponent,
+  },
+  {
+    path: 'employee/login',
+    component: LoginEmployeeComponent,
+  },
   {
     path: 'manager',
     redirectTo: 'page-not-found',
