@@ -6,64 +6,55 @@ const MongoClient = require('mongodb').MongoClient;
 const connectionString = 'mongodb+srv://webavanceem1:final@clusterm1.kqgspnb.mongodb.net/?retryWrites=true&w=majority';
 
 router.use(bodyParser.json());
-// tout ce qui est rattaché au dépense
-router.post('/addExpenseCat', async (req, res) => {
+
+router.post('/addEmployee', async (req, res) => {
   try {
     const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
     const db = client.db('finalexam');
     if (!req.body) {
       return res.status(400).json({ error: 'Request body is missing or invalid' });
     }
-    const { category } = req.body;
-    const newExpenseCat = {
-      category
+    const { firstName, lastName, address, contact, email, password, photo } = req.body;
+    const newEmployee = {
+      firstName,
+      lastName,
+      address,
+      contact,
+      email,
+      password,
+      photo
     };
-    const result = await db.collection('ExpensesCategory').insertOne(newExpenseCat);
-    res.json({ message: 'Customer added successfully' });
+    const result = await db.collection('Employee').insertOne(newEmployee);
+    res.json({ message: 'Employee added successfully' });
     client.close();
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error adding customer' });
+    res.status(500).json({ error: 'Error adding employee' });
   }
 });
 
+router.get('/allEmployees', async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1; 
+    const pageSize = parseInt(req.query.pageSize) || 10; 
+    const skip = (page - 1) * pageSize;
 
-router.post('/addExpense', async (req, res) => {
-    try {
-      const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
-      const db = client.db('finalexam');
-      if (!req.body) {
-        return res.status(400).json({ error: 'Request body is missing or invalid' });
-      }
-      const { category, amount, dateTime } = req.body;
-      const newExpense = {
-        category,
-        amount,
-        dateTime
-      };
-      const result = await db.collection('Expenses').insertOne(newExpense);
-      res.json({ message: 'Expense added successfully' });
-      client.close();
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Error adding expense' });
-    }
-  });
-
-
-router.get('/categoriesExpenselist', async (req, res) => {
-try {
     const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
     const db = client.db('finalexam');
-    const categories = await db.collection('ExpensesCategory').find({}).toArray();
-    res.json(categories);
+
+    const employees = await db.collection('Employee')
+                               .aggregate([
+                                  { $skip: skip },
+                                  { $limit: pageSize }
+                               ])
+                               .toArray();
+
+    res.json(employees);
     client.close();
-} catch (error) {
+  } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error fetching categories' });
-}
+    res.status(500).json({ error: 'Error fetching employees' });
+  }
 });
-
-
 
 module.exports = router;

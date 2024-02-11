@@ -16,6 +16,13 @@ export class EmployeeService {
       catchError(this.handleError)
     );
   }
+  
+  addEmployee(employeeData: any): Observable<any> {
+    return this.http.post(baseUrl('/employees/addEmployee'), employeeData)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
 
   private handleError(error: any) {
     console.error('An error occurred:', error);

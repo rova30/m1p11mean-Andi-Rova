@@ -19,51 +19,53 @@
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
-                <div class="modal-body">
-                  <h6>Information de base</h6>
-                  <div class="row">
-                    <div class="col-lg-6">
-                        <div class="input-group form-group-no-border input-md">
-                              <input type="text" class="form-control"  name="lastname" placeholder="Nom">
-                          </div>
+                <form (submit)="addEmployee()" enctype="multipart/form-data">
+                  <div class="modal-body">
+                    <h5>Information de base</h5>
+                    <div class="row">
+                      <div class="col-lg-6">
+                        <div class="input-group form-group-no-border input-lg">
+                          <input type="text" class="form-control" name="lastname" [(ngModel)]="employeeData.lastName" placeholder="Nom">
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="input-group form-group-no-border input-lg">
+                          <input type="text" class="form-control" name="firstname" [(ngModel)]="employeeData.firstName" placeholder="Prénoms">
+                        </div>
+                      </div>
                     </div>
-                    <div class="col-lg-6">
-                        <div class="input-group form-group-no-border input-md">
-                              <input type="text" class="form-control"  name="firstname" placeholder="Prénoms">
-                          </div>
+                    <div class="row">
+                      <div class="col-lg-6">
+                        <div class="input-group form-group-no-border input-lg">
+                          <input type="text" class="form-control" name="adress" [(ngModel)]="employeeData.address" placeholder="Adresse">
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="input-group form-group-no-border input-lg">
+                          <input type="text" class="form-control" name="contact" [(ngModel)]="employeeData.contact" placeholder="Contact">
+                        </div>
+                      </div>
                     </div>
+                    <div class="row">
+                      <div class="col-lg-6">
+                        <div class="input-group form-group-no-border input-lg">
+                          <input type="text" class="form-control" name="email" [(ngModel)]="employeeData.email" placeholder="Email">
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="input-group form-group-no-border input-lg">
+                          <input type="password" class="form-control" name="password" [(ngModel)]="employeeData.password" placeholder="Mot de passe">
+                        </div>
+                      </div>
+                    </div>
+                    <h5>Photo de profil</h5>
+                    <input type="file" name="photo" (change)="onFileSelected($event)">
                   </div>
-                  <div class="row">
-                    <div class="col-lg-6">
-                        <div class="input-group form-group-no-border input-md">
-                              <input type="text" class="form-control"  name="adress" placeholder="Adresse">
-                          </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="input-group form-group-no-border input-md">
-                              <input type="text" class="form-control"  name="contact" placeholder="Contact">
-                          </div>
-                    </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
                   </div>
-                  <div class="row">
-                    <div class="col-lg-6">
-                        <div class="input-group form-group-no-border input-md">
-                              <input type="text" class="form-control"  name="email" placeholder="Email">
-                          </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="input-group form-group-no-border input-md">
-                              <input type="password" class="form-control"  name="password" placeholder="Mot de passe">
-                          </div>
-                    </div>
-                  </div>
-                  <h6>Photo de profil</h6>
-                    <input type="file" name="" id="">
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                  <button type="button" class="btn btn-primary">Enregistrer</button>
-                </div>
+                </form>
               </div>
             </div>
           </div>
@@ -85,9 +87,8 @@
                       <h5 class="title">{{ employee.firstName }} {{ employee.lastName }}</h5>
                     </a>
                   </div>
-                  <p class="text-center"><span class="badge badge-primary" style="margin-left: 5px ;" *ngFor="let speciality of employee.specialities">{{ speciality.name }}</span></p>
-
-                  <p class="text-center">
+                  <p class="text-center"><span class="badge badge-primary" style="margin-left: 5px ;" *ngFor="let speciality of employee.specialities">{{ speciality.name }}</span></p>                  
+                  <p class="description text-center">
                     {{ employee.address }}
                     <br>
                     {{ employee.contact }}
