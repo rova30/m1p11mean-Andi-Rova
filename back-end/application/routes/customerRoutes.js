@@ -32,4 +32,38 @@ router.post('/signin', async (req, res) => {
   }
 });
 
+
+router.get('/allCustomers', async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1; 
+    const pageSize = parseInt(req.query.pageSize) || 10; 
+    const skip = (page - 1) * pageSize;
+
+    const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
+    const db = client.db('finalexam');
+
+    const customers = await db.collection('Customers')
+                               .aggregate([
+                                  { $skip: skip },
+                                  { $limit: pageSize },
+                                  {
+                                    $project: {
+                                      firstName: 1,
+                                      lastName: 1,
+                                      contact: 1,
+                                      email: 1,
+                                      password: 1
+                                    }
+                                  }
+                               ])
+                               .toArray();
+
+    res.json(customers);
+    client.close();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error fetching customers' });
+  }
+});
+
 module.exports = router;
