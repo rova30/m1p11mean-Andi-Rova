@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -24,6 +24,22 @@ export class EmployeeService {
       );
   }
 
+  loginEmployee(loginData: any): Observable<any> {
+    return this.http.post(baseUrl('/employees/loginEmployee'), loginData)
+      .pipe(
+        catchError(this.handleError)
+    );
+  }
+
+  getEmployeeByToken(token: any): Observable<any> {
+    const params = new HttpParams().set('token', token);
+  
+    return this.http.get(baseUrl('/employees/token'), { params })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+  
   private handleError(error: any) {
     console.error('An error occurred:', error);
     return throwError(error);

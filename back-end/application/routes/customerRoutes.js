@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
 
 const connectionString = 'mongodb+srv://webavanceem1:final@clusterm1.kqgspnb.mongodb.net/?retryWrites=true&w=majority';
+const generateRandomToken = require('../utils/function');
 
 router.use(bodyParser.json());
 // tout ce qui est rattaché au customer
@@ -66,7 +67,8 @@ router.post('/loginCustomer', async (req, res) => {
         }
 
         const nToken = await db.collection('TokenCustomer').insertOne(newToken);
-        res.status(200).json({ message: "Connexion réussie",customer: customer, token: nToken });
+        const insertedToken = await db.collection('TokenCustomer').findOne({ _id: nToken.insertedId });
+        res.status(200).json({ message: "Connexion réussie",customer: customer, token: insertedToken });
       }
     }else{
       res.status(401).json({ message: "Client non-identifié"});
@@ -75,6 +77,35 @@ router.post('/loginCustomer', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error login' });
+  }
+});
+
+router.get('/token', async (req, res) => {
+  try {
+    const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
+    const db = client.db('finalexam');
+    if (!req.body) {
+      return res.status(400).json({ error: 'Request body is missing or invalid' });
+    }
+
+    const tokenData = {
+      token: req.query.token,
+      expiryDate: { $gte: new Date() }
+    };
+
+
+    const tokenCustomer = await db.collection('TokenCustomer').findOne(tokenData);
+    if(tokenCustomer == null) {
+      res.status(403).json({ message: "Veuillez vous connecter" });
+    }else{
+      console.log(tokenCustomer)
+      const customer = await db.collection('Customers').findOne(tokenCustomer.customer);
+      res.status(200).json({ message: "Client récupéré", customer: customer});
+    }
+    client.close();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error getting customer' });
   }
 });
 

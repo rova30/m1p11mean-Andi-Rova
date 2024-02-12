@@ -3,6 +3,7 @@ import { ROUTES } from '../sidebar-employee/sidebar-employee.component';
 import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
 import { Router } from '@angular/router';
 import Chart from 'chart.js';
+import * as employeeService from '../../api/employee.service';
 
 @Component({
   selector: 'app-navbar-employee',
@@ -17,13 +18,34 @@ export class NavbarEmployeeComponent implements OnInit {
     private sidebarVisible: boolean;
 
     public isCollapsed = true;
+    employee: any;
+    error:string;
+    loading: boolean = false;
 
-    constructor(location: Location,  private element: ElementRef, private router: Router) {
+
+    constructor(location: Location,  private element: ElementRef, private router: Router,private employeeService: employeeService.EmployeeService) {
       this.location = location;
-          this.sidebarVisible = false;
+      this.sidebarVisible = false;
     }
-
+    getEmployee(token:string) {
+      this.loading = true;
+      this.employeeService.getEmployeeByToken(token).subscribe(
+        (data: any) => {
+          this.employee = data.employee;
+          this.loading = false;
+          console.log(data.employee)
+        },
+        (error: any) => {
+          console.error('Error getting employee:', error);
+          this.error = 'Error getting employee'; 
+          this.loading = false;
+          window.location.href = 'employee/login';  
+        }
+      );
+    }
     ngOnInit(){
+      const token = sessionStorage.getItem('token_employee');
+      this.getEmployee(token);
       this.listTitles = ROUTES.filter(listTitle => listTitle);
       const navbar: HTMLElement = this.element.nativeElement;
       this.toggleButton = navbar.getElementsByClassName('navbar-toggler')[0];

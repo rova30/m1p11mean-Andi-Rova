@@ -3,7 +3,7 @@
     <div class="container">
         <div class="col-md-4 content-center">
             <div class="card card-signin card-plain">
-                <form class="form" method="post" action="POST" (ngSubmit)="onSubmit()">
+                <form class="form" method="post" (ngSubmit)="onSubmit()">
                     <div class="header header-primary text-center">
                         <div class="logo-container">
                             <img src="assets/img/logo-r&a.png" alt="">
@@ -57,16 +57,6 @@
                     <div class="footer text-center">
                         <button type="submit" class="btn btn-primary btn-round btn-lg btn-block">S'inscrire</button>  
                     </div>
-                    <!-- Spinner de chargement -->
-                    <div *ngIf="loading" class="spinner-overlay">
-                        <mat-spinner diameter="50" color="accent"></mat-spinner>
-                    </div>
-                    <!-- Modal de succès -->
-                    <div *ngIf="showSuccess" class="modal success">
-                    <!-- Contenu du modal de succès -->
-                    <p>Opération réussie !</p>
-                    </div>
-
                     <!-- Modal d'erreur -->
                     <div *ngIf="showError" class="modal error">
                     <!-- Contenu du modal d'erreur -->
@@ -77,7 +67,12 @@
                             <a href="/login" class="link">Vous avez déjà un compte ?</a>
                         </h6>
                     </div>
-                </form>
+                    <div *ngIf="loading" class="text-center mt-3">
+                        <div class="spinner-border" role="status">
+                          <span class="sr-only">Loading...</span>
+                        </div>
+                      </div>
+                    </form>
             </div>
         </div>
     </div>
