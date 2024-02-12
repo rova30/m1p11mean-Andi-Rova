@@ -27,6 +27,11 @@ export class NavbarComponent implements OnInit {
       this.sidebarVisible = false;
     }
 
+    logoutManager() {
+      sessionStorage.removeItem('token_manager');
+      window.location.href = 'manager/login';  
+    }
+
     getManager(token:string) {
       this.loading = true;
       this.mangerService.getManagerByToken(token).subscribe(
@@ -174,4 +179,8 @@ export class NavbarComponent implements OnInit {
       }
       return 'Dashboard';
     }
+
+    ngOnDestroy():void {
+    }
+  
 }

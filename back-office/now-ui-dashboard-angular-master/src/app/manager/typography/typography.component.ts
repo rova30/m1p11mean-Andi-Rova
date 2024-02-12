@@ -11,5 +11,7 @@ export class TypographyComponent implements OnInit {
 
   ngOnInit() {
   }
+  ngOnDestroy():void {
+  }
 
 }

@@ -412,4 +412,8 @@ export class DashboardComponent implements OnInit {
 
     this.lineChartGradientsNumbersType = 'bar';
   }
+
+  ngOnDestroy():void {
+  }
+
 }

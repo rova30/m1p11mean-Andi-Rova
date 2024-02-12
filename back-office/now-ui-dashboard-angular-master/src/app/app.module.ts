@@ -16,6 +16,9 @@ import { EmployeeLayoutComponent } from './layouts/employee-layout/employee-layo
 import { PageNotFoundComponent } from './error/404/page-not-found.component';
 import { LoginManagerComponent } from './manager/login/login.component';
 import { LoginEmployeeComponent } from './employee/login/login.component';
+import { EmployeeService } from './api/employee.service';
+import { ManagerService } from './api/manager.service';
+import { CustomerService } from './api/customer.service';
 
 @NgModule({
   imports: [
@@ -36,8 +39,6 @@ import { LoginEmployeeComponent } from './employee/login/login.component';
     LoginManagerComponent,
     LoginEmployeeComponent
     
-  ],
-  providers: [
   ],
   bootstrap: [AppComponent]
 })

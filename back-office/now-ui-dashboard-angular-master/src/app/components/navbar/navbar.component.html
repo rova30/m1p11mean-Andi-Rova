@@ -41,7 +41,7 @@
               </a>
               <div class="dropdown-menu dropdown-menu-right" ngbDropdownMenu aria-labelledby="dropdownBasic1" *ngIf="manager;">
                 <a class="dropdown-item" style="color: black ;" href="#">{{manager.firstName}}&nbsp;{{manager.lastName}}</a>
-                <a class="dropdown-item" href="#">Se déconnecter</a>
+                <a class="dropdown-item" href="#" (click)="logoutManager()">Se déconnecter</a>
               </div>
             </li> 
           </ul>

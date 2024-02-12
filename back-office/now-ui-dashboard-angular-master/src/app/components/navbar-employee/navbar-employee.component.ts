@@ -27,6 +27,12 @@ export class NavbarEmployeeComponent implements OnInit {
       this.location = location;
       this.sidebarVisible = false;
     }
+
+    logoutEmployee() {
+      sessionStorage.removeItem('token_employee');
+      window.location.href = 'employee/login';  
+    }
+
     getEmployee(token:string) {
       this.loading = true;
       this.employeeService.getEmployeeByToken(token).subscribe(
@@ -173,4 +179,8 @@ export class NavbarEmployeeComponent implements OnInit {
       }
       return 'Dashboard';
     }
+
+    ngOnDestroy():void {
+    }
+  
 }

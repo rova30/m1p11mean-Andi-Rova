@@ -16,8 +16,6 @@ import { ToastrModule } from 'ngx-toastr';
 import { UpgradeComponent } from '../../manager/upgrade/upgrade.component';
 import { EmployeeComponent } from '../../manager/employee/employee.component';
 import { CustomerComponent } from '../../manager/customer/customer.component';
-import { EmployeeService } from '../../api/employee.service';
-import { ManagerService } from '../../api/manager.service';
 
 @NgModule({
   imports: [
@@ -39,8 +37,7 @@ import { ManagerService } from '../../api/manager.service';
     IconsComponent,
     MapsComponent,
     NotificationsComponent,
-  ],
-  providers: [EmployeeService,ManagerService],
+  ]
 })
 
 export class AdminLayoutModule {}

@@ -11,5 +11,7 @@ export class UpgradeComponent implements OnInit {
 
   ngOnInit() {
   }
+  ngOnDestroy():void {
+  }
 
 }

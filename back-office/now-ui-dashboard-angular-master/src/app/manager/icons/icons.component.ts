@@ -10,6 +10,10 @@ export class IconsComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+  } 
+  
+  ngOnDestroy():void {
   }
+
 
 }

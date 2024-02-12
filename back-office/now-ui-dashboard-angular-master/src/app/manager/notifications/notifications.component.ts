@@ -65,5 +65,7 @@ export class NotificationsComponent implements OnInit {
   }
   ngOnInit() {
   }
+  ngOnDestroy():void {
+  }
 
 }

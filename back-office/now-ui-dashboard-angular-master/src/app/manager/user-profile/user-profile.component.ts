@@ -11,5 +11,7 @@ export class UserProfileComponent implements OnInit {
 
   ngOnInit() {
   }
+  ngOnDestroy():void {
+  }
 
 }

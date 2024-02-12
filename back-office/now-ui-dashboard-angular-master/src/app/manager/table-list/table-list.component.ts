@@ -11,5 +11,7 @@ export class TableListComponent implements OnInit {
 
   ngOnInit() {
   }
+  ngOnDestroy():void {
+  }
 
 }

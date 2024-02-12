@@ -85,7 +85,7 @@ export class EmployeeLayoutComponent implements OnInit {
       return bool;
   }
 
-  ngOnDestroy() {
+  ngOnDestroy():void {
     // Nettoyer les ressources ici, par exemple désinscrire les abonnements
     if (this._router) {
       this._router.unsubscribe();

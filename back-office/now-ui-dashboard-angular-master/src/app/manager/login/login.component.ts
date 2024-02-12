@@ -56,5 +56,8 @@ export class LoginManagerComponent implements OnInit {
 
   ngOnInit() {
   }
+  ngOnDestroy():void {
+  }
+
 
 }

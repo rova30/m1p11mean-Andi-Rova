@@ -12,5 +12,8 @@ export class FooterEmployeeComponent implements OnInit {
 
   ngOnInit() {
   }
+  ngOnDestroy():void {
+  }
+
 
 }

@@ -11,7 +11,7 @@ export class EmployeeComponent implements OnInit {
   error: string = '';
   currentPage: number = 1; 
   totalPages: number = 0; 
-  
+
   loading: boolean = false;
   employeeData: any = {
     firstName: '',
@@ -111,4 +111,7 @@ export class EmployeeComponent implements OnInit {
       };
     });
   }
+  ngOnDestroy():void {
+  }
+
 }

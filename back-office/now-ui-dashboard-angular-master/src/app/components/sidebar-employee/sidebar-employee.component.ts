@@ -31,4 +31,8 @@ export class SidebarEmployeeComponent implements OnInit {
       }
       return true;
   };
+
+  ngOnDestroy():void {
+  }
+
 }
