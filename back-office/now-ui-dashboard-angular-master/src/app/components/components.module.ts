@@ -9,6 +9,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { SidebarEmployeeComponent } from './sidebar-employee/sidebar-employee.component';
 import { NavbarEmployeeComponent } from './navbar-employee/navbar-employee.component';
 import { FooterEmployeeComponent } from './footer-employee/footer-employee.component';
+import { EmployeeService } from '../api/employee.service';
 
 @NgModule({
   imports: [

@@ -3,7 +3,7 @@
     <div class="container">
         <div class="col-md-4 content-center">
             <div class="card card-login card-plain">
-                <form class="form" method="" action="POST" (ngSubmit)="onSubmit()">
+                <form class="form" method="POST" (ngSubmit)="onSubmit()">
                     <div class="header header-primary text-center">
                         <div class="logo-container">
                             <img src="assets/img/logo-r&a.png" alt="">
@@ -30,7 +30,12 @@
                         <h6>
                             <a href="/signin" class="link">Pas encore de compte ?</a>
                         </h6>
-                    </div>
+                        <div *ngIf="loading" class="text-center mt-3">
+                            <div class="spinner-border" role="status">
+                              <span class="sr-only">Loading...</span>
+                            </div>
+                          </div>
+                      </div>
                 </form>
             </div>
         </div>

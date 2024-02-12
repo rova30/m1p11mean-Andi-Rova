@@ -155,7 +155,8 @@ router.put('/updateEmployee/:id', async (req, res) => {
           }
 
           const nToken = await db.collection('TokenEmployee').insertOne(newToken);
-          res.status(200).json({ message: "Connexion réussie",employee: employee, token: nToken });
+          const insertedToken = await db.collection('TokenEmployee').findOne({ _id: nToken.insertedId });
+          res.status(200).json({ message: "Connexion réussie",employee: employee, token: insertedToken });
         }
       }else{
         res.status(401).json({ message: "Employé non-identifié"});
@@ -166,5 +167,36 @@ router.put('/updateEmployee/:id', async (req, res) => {
       res.status(500).json({ error: 'Error login' });
     }
   });
+
+
+  router.get('/token', async (req, res) => {
+    try {
+      const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
+      const db = client.db('finalexam');
+      if (!req.body) {
+        return res.status(400).json({ error: 'Request body is missing or invalid' });
+      }
+
+      const tokenData = {
+        token: req.query.token,
+        expiryDate: { $gte: new Date() }
+      };
+
+      console.log(tokenData)
+
+      const tokenEmployee = await db.collection('TokenEmployee').findOne(tokenData);
+      if(tokenEmployee == null) {
+        res.status(403).json({ message: "Veuillez vous connecter" });
+      }else{
+        const employee = await db.collection('Employee').findOne(tokenEmployee.employee);
+        res.status(200).json({ message: "Employé récupéré", employee: employee});
+      }
+      client.close();
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error getting employee' });
+    }
+  });
+
 
 module.exports = router;

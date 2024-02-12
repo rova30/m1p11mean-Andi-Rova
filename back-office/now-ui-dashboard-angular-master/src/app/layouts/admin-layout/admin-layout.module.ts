@@ -18,6 +18,7 @@ import { EmployeeComponent } from '../../manager/employee/employee.component';
 import { CustomerComponent } from '../../manager/customer/customer.component';
 import { EmployeeService } from '../../api/employee.service';
 import { CustomerService } from '../../api/customer.service';
+import { ManagerService } from '../../api/manager.service';
 
 @NgModule({
   imports: [
@@ -42,7 +43,8 @@ import { CustomerService } from '../../api/customer.service';
   ],
   providers: [
     EmployeeService, 
-    CustomerService],
+    CustomerService,
+    ManagerService],
 })
 
 export class AdminLayoutModule {}

@@ -16,8 +16,9 @@ export class EmployeeLayoutComponent implements OnInit {
   private _router: Subscription;
   private lastPoppedUrl: string;
   private yScrollStack: number[] = [];
-
   constructor( public location: Location, private router: Router) {}
+
+
 
   ngOnInit() {
       const isWindows = navigator.platform.indexOf('Win') > -1 ? true : false;

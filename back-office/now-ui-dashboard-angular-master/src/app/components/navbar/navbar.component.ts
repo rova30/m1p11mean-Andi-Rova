@@ -3,6 +3,7 @@ import { ROUTES } from '../sidebar/sidebar.component';
 import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
 import { Router } from '@angular/router';
 import Chart from 'chart.js';
+import * as mangerService from '../../api/manager.service';
 
 @Component({
   selector: 'app-navbar',
@@ -17,13 +18,35 @@ export class NavbarComponent implements OnInit {
     private sidebarVisible: boolean;
 
     public isCollapsed = true;
+    manager: any;
+    error:string;
+    loading: boolean = false;
 
-    constructor(location: Location,  private element: ElementRef, private router: Router) {
+    constructor(location: Location,  private element: ElementRef, private router: Router,private mangerService: mangerService.ManagerService) {
       this.location = location;
-          this.sidebarVisible = false;
+      this.sidebarVisible = false;
+    }
+
+    getManager(token:string) {
+      this.loading = true;
+      this.mangerService.getManagerByToken(token).subscribe(
+        (data: any) => {
+          this.manager = data.manager;
+          this.loading = false;
+          console.log(data.manager)
+        },
+        (error: any) => {
+          console.error('Error getting manager:', error);
+          this.error = 'Error getting manager'; 
+          this.loading = false;
+          window.location.href = 'manager/login';  
+        }
+      );
     }
 
     ngOnInit(){
+      const token = sessionStorage.getItem('token_manager');
+      this.getManager(token);
       this.listTitles = ROUTES.filter(listTitle => listTitle);
       const navbar: HTMLElement = this.element.nativeElement;
       this.toggleButton = navbar.getElementsByClassName('navbar-toggler')[0];
