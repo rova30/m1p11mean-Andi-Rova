@@ -16,6 +16,12 @@ export class CustomerService {
       catchError(this.handleError)
     );
   }
+
+  getTotalCustomersCount(): Observable<number> {
+    return this.http.get<number>(`${baseUrl('/customers/totalCustomersCount')}`).pipe(
+      catchError(this.handleError)
+    );
+  }  
   
   private handleError(error: any) {
     console.error('An error occurred:', error);

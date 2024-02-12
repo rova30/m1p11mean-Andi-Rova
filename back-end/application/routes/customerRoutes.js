@@ -81,29 +81,19 @@ router.post('/loginCustomer', async (req, res) => {
 
 router.get('/allCustomers', async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1; 
-    const pageSize = parseInt(req.query.pageSize) || 10; 
+    const page = parseInt(req.query.page);
+    const pageSize = parseInt(req.query.pageSize);
     const skip = (page - 1) * pageSize;
 
     const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
     const db = client.db('finalexam');
 
     const customers = await db.collection('Customers')
-                               .aggregate([
-                                  { $skip: skip },
-                                  { $limit: pageSize },
-                                  {
-                                    $project: {
-                                      firstName: 1,
-                                      lastName: 1,
-                                      contact: 1,
-                                      email: 1,
-                                      password: 1
-                                    }
-                                  }
-                               ])
+                               .find()
+                               .skip(skip)
+                               .limit(pageSize)
                                .toArray();
-
+    console.log(pageSize)
     res.json(customers);
     client.close();
   } catch (error) {
@@ -111,5 +101,20 @@ router.get('/allCustomers', async (req, res) => {
     res.status(500).json({ error: 'Error fetching customers' });
   }
 });
+
+router.get('/totalCustomersCount', async (req, res) => {
+  try {
+    const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
+    const db = client.db('finalexam');
+    const count = await db.collection('Customers').countDocuments();
+    res.json(count);
+    client.close();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error fetching total customers count' });
+  }
+});
+
+
 
 module.exports = router;
