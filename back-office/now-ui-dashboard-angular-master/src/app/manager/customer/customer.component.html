@@ -8,6 +8,11 @@
           <h4 class="card-title">Liste des clients</h4>
         </div>
         <div class="card-body">
+          <div *ngIf="loading" class="text-center mt-3">
+            <div class="spinner-border" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
           <div class="table-responsive">
             <table class="table">
               <thead class=" text-primary">
@@ -25,18 +30,18 @@
                 </th>
               </thead>
               <tbody>
-                <tr>
+                <tr *ngFor="let customer of customers">
                   <td>
-                    RAKOTO
+                    {{ customer.firstName }}
                   </td>
                   <td>
-                    Pierre
+                    {{ customer.lastName }}
                   </td>
                   <td>
-                    0348872414
+                    {{ customer.contact }}
                   </td>
                   <td>
-                    rakoto@gmail.com
+                    {{ customer.email }}
                   </td>
                 </tr>
               </tbody>
@@ -44,6 +49,23 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12" *ngIf="!loading">
+      <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+          <li class="page-item">
+            <button class="page-link" (click)="prevPage()">Précédent</button>
+          </li>
+          <li class="page-item disabled">
+            <span class="page-link">{{ currentPage }} / {{ totalPages }}</span>
+          </li>
+          <li class="page-item">
+            <button class="page-link" (click)="nextPage()">Suivant</button>
+          </li>
+        </ul>
+      </nav>
     </div>
   </div>
 </div>

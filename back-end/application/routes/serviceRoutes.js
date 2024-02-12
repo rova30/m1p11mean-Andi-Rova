@@ -32,9 +32,19 @@ router.post('/addService', async (req, res) => {
 
 router.get('/allServices', async (req, res) => {
   try {
+    const page = parseInt(req.query.page);
+    const pageSize = parseInt(req.query.pageSize);
+    const skip = (page - 1) * pageSize;
+
     const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
     const db = client.db('finalexam');
-    const services = await db.collection('Service').find({}).toArray();
+
+    const services = await db.collection('Service')
+                               .find()
+                               .skip(skip)
+                               .limit(pageSize)
+                               .toArray();
+
     res.json(services);
     client.close();
   } catch (error) {
@@ -42,5 +52,19 @@ router.get('/allServices', async (req, res) => {
     res.status(500).json({ error: 'Error fetching services' });
   }
 });
+
+router.get('/totalServicesCount', async (req, res) => {
+  try {
+    const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
+    const db = client.db('finalexam');
+    const count = await db.collection('Service').countDocuments();
+    res.json(count);
+    client.close();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error fetching total Services count' });
+  }
+});
+
 
 module.exports = router;

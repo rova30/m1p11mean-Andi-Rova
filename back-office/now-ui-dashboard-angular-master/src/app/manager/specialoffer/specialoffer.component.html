@@ -1,0 +1,107 @@
+<div class="panel-header panel-header-sm"></div>
+<div class="main-content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Liste des services</h4>
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newServiceModal">
+            Nouveau service
+          </button>
+
+          <div class="modal fade" id="newServiceModal" tabindex="-1" role="dialog" aria-labelledby="newServiceModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="newServiceModalLabel">Ajout service</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <form (submit)="addService()" enctype="multipart/form-data">
+                  <div class="modal-body">
+                    <h5>--</h5>
+                    <div class="row">
+                      <div class="col-lg-6">
+                        <div class="input-group form-group-no-border input-lg">
+                          <input type="text" class="form-control" name="name" [(ngModel)]="serviceData.name" placeholder="Nom">
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="input-group form-group-no-border input-lg">
+                          <input type="number" class="form-control" name="deadline" [(ngModel)]="serviceData.deadline" step="any" placeholder="Durée">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-lg-6">
+                        <div class="input-group form-group-no-border input-lg">
+                          <input type="number" class="form-control" name="cost" [(ngModel)]="serviceData.cost" step="any" placeholder="Prix">
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="input-group form-group-no-border input-lg">
+                          <input type="text" class="form-control" name="commission" [(ngModel)]="serviceData.commission" placeholder="Commission">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="card-body">
+          <div *ngIf="loading" class="text-center mt-3">
+            <div class="spinner-border" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4" *ngFor="let service of services">
+              <div class="card card-user">
+                <div class="card-body">
+                  <div class="author">
+                    <a href="#">
+                      <h5 class="title">{{ service.name }}</h5>
+                    </a>
+                  </div>              
+                  <p class="description text-center">
+                    Durée : {{ service.deadline }} mn
+                    <br>
+                    Prix normal : {{ service.cost }} Ar
+                    <br>
+                    Commission : {{ service.commission }} %
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12" *ngIf="!loading">
+              <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                  <li class="page-item">
+                    <button class="page-link" (click)="prevPage()">Précédent</button>
+                  </li>
+                  <li class="page-item disabled">
+                    <span class="page-link">{{ currentPage }} / {{ totalPages }}</span>
+                  </li>
+                  <li class="page-item">
+                    <button class="page-link" (click)="nextPage()">Suivant</button>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

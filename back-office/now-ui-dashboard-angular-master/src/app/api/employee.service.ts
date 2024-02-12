@@ -16,6 +16,13 @@ export class EmployeeService {
       catchError(this.handleError)
     );
   }
+
+  totalEmployeesCount(): Observable<number> {
+    return this.http.get<number>(`${baseUrl('/employees/totalEmployeesCount')}`).pipe(
+      catchError(this.handleError)
+    );
+  }
+  
   
   addEmployee(employeeData: any): Observable<any> {
     return this.http.post(baseUrl('/employees/addEmployee'), employeeData)

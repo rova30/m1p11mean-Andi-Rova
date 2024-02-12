@@ -37,8 +37,8 @@ router.post('/addEmployee', async (req, res) => {
 
 router.get('/allEmployees', async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1; 
-    const pageSize = parseInt(req.query.pageSize) || 10; 
+    const page = parseInt(req.query.page); 
+    const pageSize = parseInt(req.query.pageSize); 
     const skip = (page - 1) * pageSize;
 
     const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
@@ -78,6 +78,20 @@ router.get('/allEmployees', async (req, res) => {
   }
 });
 
+router.get('/totalEmployeesCount', async (req, res) => {
+  try {
+    const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
+    const db = client.db('finalexam');
+
+    const count = await db.collection('Employee').countDocuments();
+
+    res.json(count);
+    client.close();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error fetching total employees count' });
+  }
+});
 
 
 
