@@ -33,6 +33,52 @@ router.post('/signin', async (req, res) => {
 });
 
 
+router.post('/loginCustomer', async (req, res) => {
+  try {
+    const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
+    const db = client.db('finalexam');
+    if (!req.body) {
+      return res.status(400).json({ error: 'Request body is missing or invalid' });
+    }
+
+    const { email, password } = req.body;
+    const loginData = {
+      email: email,
+      password: password,
+    };
+
+    const customer = await db.collection('Customers').findOne(loginData);
+    if(customer != null) {
+      var filterToken = {
+        customer : customer._id,
+        expiryDate: { $gte: new Date() },
+      };
+      const token = await db.collection('TokenCustomer').findOne(filterToken);
+
+      if(token != null) {
+        res.status(200).json({ message: "Connexion réussie",customer: customer, token: token });
+      } else{
+        const newTokenValue = generateRandomToken(40);
+        const newToken = {
+          customer: customer._id,
+          token: newTokenValue,
+          expiryDate: new Date(Date.now() + 24 * 60 * 60 * 1000)
+        }
+
+        const nToken = await db.collection('TokenCustomer').insertOne(newToken);
+        res.status(200).json({ message: "Connexion réussie",customer: customer, token: nToken });
+      }
+    }else{
+      res.status(401).json({ message: "Client non-identifié"});
+    }
+    client.close();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error login' });
+  }
+});
+
+
 router.get('/allCustomers', async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1; 

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
+const generateRandomToken = require('../utils/function');
 const MongoClient = require('mongodb').MongoClient;
 
 const connectionString = 'mongodb+srv://webavanceem1:final@clusterm1.kqgspnb.mongodb.net/?retryWrites=true&w=majority';
@@ -103,6 +104,52 @@ router.put('/updateEmployee/:id', async (req, res) => {
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Error updating employee' });
+    }
+  });
+
+
+  router.post('/loginEmployee', async (req, res) => {
+    try {
+      const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
+      const db = client.db('finalexam');
+      if (!req.body) {
+        return res.status(400).json({ error: 'Request body is missing or invalid' });
+      }
+
+      const { email, password } = req.body;
+      const loginData = {
+        email: email,
+        password: password,
+      };
+
+      const employee = await db.collection('Employee').findOne(loginData);
+      if(employee != null) {
+        var filterToken = {
+          employee : employee._id,
+          expiryDate: { $gte: new Date() },
+        };
+        const token = await db.collection('TokenEmployee').findOne(filterToken);
+
+        if(token != null) {
+          res.status(200).json({ message: "Connexion réussie",employee: employee, token: token });
+        } else{
+          const newTokenValue = generateRandomToken(40);
+          const newToken = {
+            employee: employee._id,
+            token: newTokenValue,
+            expiryDate: new Date(Date.now() + 24 * 60 * 60 * 1000)
+          }
+
+          const nToken = await db.collection('TokenEmployee').insertOne(newToken);
+          res.status(200).json({ message: "Connexion réussie",employee: employee, token: nToken });
+        }
+      }else{
+        res.status(401).json({ message: "Employé non-identifié"});
+      }
+      client.close();
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error login' });
     }
   });
 

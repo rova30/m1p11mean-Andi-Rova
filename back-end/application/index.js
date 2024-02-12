@@ -9,6 +9,7 @@ const customerRoutes = require('./routes/customerRoutes');
 const expensesRoutes = require('./routes/expenseRoutes');
 const serviceRoutes = require('./routes/serviceRoutes');
 const employeeRoutes = require('./routes/employeeRoutes');
+const managerRoutes = require('./routes/managerRoutes');
 const specialOfferRoutes = require('./routes/specialOfferRoutes');
 const preferenceRoutes = require('./routes/preferenceRoutes');
 
@@ -17,6 +18,7 @@ app.use(cors());
 
 // Utiliser les routes dans l'application
 app.use('/customers', customerRoutes);
+app.use('/managers', managerRoutes);
 app.use('/expenses', expensesRoutes);
 app.use('/services', serviceRoutes);
 app.use('/employees', employeeRoutes);
