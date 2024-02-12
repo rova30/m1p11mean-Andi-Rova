@@ -19,6 +19,8 @@ import { LoginEmployeeComponent } from './employee/login/login.component';
 import { EmployeeService } from './api/employee.service';
 import { ManagerService } from './api/manager.service';
 import { CustomerService } from './api/customer.service';
+import { ServiceService } from './api/service.service';
+import { SpecialOfferService } from './api/specialoffer.service';
 
 @NgModule({
   imports: [
@@ -39,6 +41,13 @@ import { CustomerService } from './api/customer.service';
     LoginManagerComponent,
     LoginEmployeeComponent
     
+  ],
+  providers: [
+    EmployeeService, 
+    CustomerService,
+    ManagerService,
+    ServiceService,
+    SpecialOfferService
   ],
   bootstrap: [AppComponent]
 })
