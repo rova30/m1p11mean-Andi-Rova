@@ -17,10 +17,12 @@ import { UpgradeComponent } from '../../manager/upgrade/upgrade.component';
 import { EmployeeComponent } from '../../manager/employee/employee.component';
 import { CustomerComponent } from '../../manager/customer/customer.component';
 import { ServiceComponent } from '../../manager/service/service.component';
+import { SpecialOfferComponent } from '../../manager/specialoffer/specialoffer.component';
 import { EmployeeService } from '../../api/employee.service';
 import { CustomerService } from '../../api/customer.service';
 import { ManagerService } from '../../api/manager.service';
 import { ServiceService } from '../../api/service.service';
+import { SpecialOfferService } from '../../api/specialoffer.service';
 
 @NgModule({
   imports: [
@@ -38,6 +40,7 @@ import { ServiceService } from '../../api/service.service';
     EmployeeComponent,
     CustomerComponent,
     ServiceComponent,
+    SpecialOfferComponent,
     UpgradeComponent,
     TypographyComponent,
     IconsComponent,
@@ -48,7 +51,8 @@ import { ServiceService } from '../../api/service.service';
     EmployeeService, 
     CustomerService,
     ManagerService,
-    ServiceService],
+    ServiceService,
+    SpecialOfferService],
 })
 
 export class AdminLayoutModule {}
