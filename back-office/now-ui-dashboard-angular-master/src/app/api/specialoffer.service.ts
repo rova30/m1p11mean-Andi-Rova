@@ -10,22 +10,22 @@ import { baseUrl } from './global_api';
 export class SpecialOfferService {
   constructor(private http: HttpClient) { }
 
-  getServices(page: number, pageSize: number): Observable<any[]> {
-    const url = `${baseUrl('/services/allServices')}?page=${page}&pageSize=${pageSize}`;
+  getSpecialOffers(page: number, pageSize: number): Observable<any[]> {
+    const url = `${baseUrl('/specialOffers/allSpecialOffers')}?page=${page}&pageSize=${pageSize}`;
     return this.http.get<any[]>(url).pipe(
       catchError(this.handleError)
     );
   }
 
-  totalServicesCount(): Observable<number> {
-    return this.http.get<number>(`${baseUrl('/services/totalServicesCount')}`).pipe(
+  totalSpecialOffersCount(): Observable<number> {
+    return this.http.get<number>(`${baseUrl('/specialOffers/totalSpecialOffersCount')}`).pipe(
       catchError(this.handleError)
     );
   }
   
   
-  addService(serviceData: any): Observable<any> {
-    return this.http.post(baseUrl('/services/addService'), serviceData)
+  addSpecialOffer(serviceData: any): Observable<any> {
+    return this.http.post(baseUrl('/specialOffers/addSpecialOffer'), serviceData)
       .pipe(
         catchError(this.handleError)
       );

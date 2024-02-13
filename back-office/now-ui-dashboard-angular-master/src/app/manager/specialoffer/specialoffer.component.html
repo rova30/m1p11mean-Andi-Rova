@@ -19,7 +19,7 @@
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
-                <form (submit)="addService()" enctype="multipart/form-data">
+                <form (submit)="addSpecialOffer()" enctype="multipart/form-data">
                   <div class="modal-body">
                     <h5>--</h5>
                     <div class="row">
@@ -64,24 +64,26 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-4" *ngFor="let service of services">
-              <div class="card card-user">
+            <div class="col-md-4" *ngFor="let specialOffer of specialOffers" >
+              <div class="card card-user" [ngClass]="{'expired': isExpired(specialOffer.dateEnd)}">
                 <div class="card-body">
                   <div class="author">
                     <a href="#">
-                      <h5 class="title">{{ service.name }}</h5>
+                      <h5 class="title">{{ specialOffer.name }}</h5>
                     </a>
-                  </div>              
+                  </div>               
+                  <p class="text-center"><span class="badge badge-primary" style="margin-left: 5px ;" *ngFor="let service of specialOffer.services">{{ service.name }}</span></p>    
+                  <p class="description"></p>              
                   <p class="description text-center">
-                    Durée : {{ service.deadline }} mn
+                     {{ specialOffer.description }} 
                     <br>
-                    Prix normal : {{ service.cost }} Ar
+                    Prix : {{ specialOffer.price }} Ar ou {{ specialOffer.reduction }} % de réduction 
                     <br>
-                    Commission : {{ service.commission }} %
+                    {{ specialOffer.dateStart | date: 'dd/MM/yyyy' }} - {{ specialOffer.dateEnd | date: 'dd/MM/yyyy' }}
                   </p>
                 </div>
               </div>
-            </div>
+            </div>            
           </div>
           <div class="row">
             <div class="col-md-12" *ngIf="!loading">

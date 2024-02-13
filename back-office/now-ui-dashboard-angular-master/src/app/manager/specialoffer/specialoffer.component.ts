@@ -7,7 +7,7 @@ import { SpecialOfferService } from '../../api/specialoffer.service';
   styleUrls: ['./specialoffer.component.css']
 })
 export class SpecialOfferComponent implements OnInit {
-    services: any[] = [];
+    specialOffers: any[] = [];
     error: string = '';
     currentPage: number = 1;
     pageSize: number = 10;
@@ -16,53 +16,55 @@ export class SpecialOfferComponent implements OnInit {
     loading: boolean = false;
     serviceData: any = {
       name: '',
-      deadline: '',
-      cost: '',
-      commission: ''
+      description: '',
+      reduction: '',
+      price: '',
+      dateStart: '',
+      dateEnd: ''
     };
   
-    constructor(private serviceService: SpecialOfferService) { }
+    constructor(private specialOfferService: SpecialOfferService) { }
   
     ngOnInit() {
-      this.getServicesCount();
+      this.getSpecialOffersCount();
     }
   
-    getServicesCount() {
-      this.serviceService.totalServicesCount().subscribe(
+    getSpecialOffersCount() {
+      this.specialOfferService.totalSpecialOffersCount().subscribe(
         (count: number) => {
           this.totalPages = Math.ceil(count / this.pageSize);
-          this.getServices(this.currentPage, this.pageSize);
+          this.getSpecialOffers(this.currentPage, this.pageSize);
         },
         (error: any) => {
-          console.error('Error fetching total Services count:', error);
+          console.error('Error fetching total specialOffers count:', error);
         }
       );
     }
   
-    getServices(page: number, pageSize: number) {
+    getSpecialOffers(page: number, pageSize: number) {
       this.error = '';
       this.loading = true;
   
-      this.serviceService.getServices(page, pageSize).subscribe(
+      this.specialOfferService.getSpecialOffers(page, pageSize).subscribe(
         (data: any[]) => {
-          this.services = data;
+          this.specialOffers = data;
           this.currentPage = page;
           this.loading = false;
         },
         (error: any) => {
-          console.error('Error fetching services:', error);
-          this.error = 'Error fetching services';
+          console.error('Error fetching specialOffers:', error);
+          this.error = 'Error fetching specialOffers';
           this.loading = false;
         }
       );
     }
   
-    addService() {
-        this.serviceService.addService(this.serviceData).subscribe(
+    addSpecialOffer() {
+        this.specialOfferService.addSpecialOffer(this.serviceData).subscribe(
           (response) => {
             console.log('service added successfully:', response);
             this.resetForm();
-            this.getServices(this.currentPage, this.pageSize);
+            this.getSpecialOffers(this.currentPage, this.pageSize);
           },
           (error) => {
             console.error('Error adding service:', error);
@@ -71,7 +73,16 @@ export class SpecialOfferComponent implements OnInit {
         );
       }
 
-
+      isExpired(dateEnd: string): boolean {
+        const now = new Date();
+        const endDate = new Date(dateEnd);
+        const endYear = endDate.getFullYear();
+        const endMonth = endDate.getMonth();
+        const endDay = endDate.getDate();
+        const end = new Date(endYear, endMonth, endDay);
+        return end < now;
+      }
+      
   
     resetForm() {
       this.serviceData = {
@@ -87,13 +98,13 @@ export class SpecialOfferComponent implements OnInit {
   
     prevPage() {
       if (this.currentPage > 1) {
-        this.getServices(this.currentPage - 1, this.pageSize);
+        this.getSpecialOffers(this.currentPage - 1, this.pageSize);
       }
     }
   
     nextPage() {
       if (this.currentPage < this.totalPages) {
-        this.getServices(this.currentPage + 1, this.pageSize);
+        this.getSpecialOffers(this.currentPage + 1, this.pageSize);
       }
     }
   
