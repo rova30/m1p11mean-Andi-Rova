@@ -6,7 +6,7 @@
         <div class="card-header">
           <h4 class="card-title">Liste des services</h4>
           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newServiceModal">
-            Nouveau service
+            Nouvelle offre spéciale
           </button>
 
           <div class="modal fade" id="newServiceModal" tabindex="-1" role="dialog" aria-labelledby="newServiceModalLabel"
@@ -14,7 +14,7 @@
             <div class="modal-dialog modal-lg" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="newServiceModalLabel">Ajout service</h5>
+                  <h5 class="modal-title" id="newServiceModalLabel">Offre spéciale</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
@@ -23,29 +23,76 @@
                   <div class="modal-body">
                     <h5>--</h5>
                     <div class="row">
-                      <div class="col-lg-6">
+                      <div class="col-lg-12">
                         <div class="input-group form-group-no-border input-lg">
                           <input type="text" class="form-control" name="name" [(ngModel)]="serviceData.name" placeholder="Nom">
                         </div>
                       </div>
-                      <div class="col-lg-6">
+                      <div class="col-lg-12">
                         <div class="input-group form-group-no-border input-lg">
-                          <input type="number" class="form-control" name="deadline" [(ngModel)]="serviceData.deadline" step="any" placeholder="Durée">
+                          <input type="text" class="form-control" name="description" [(ngModel)]="serviceData.description" step="any" placeholder="Description">
                         </div>
                       </div>
                     </div>
                     <div class="row">
                       <div class="col-lg-6">
                         <div class="input-group form-group-no-border input-lg">
-                          <input type="number" class="form-control" name="cost" [(ngModel)]="serviceData.cost" step="any" placeholder="Prix">
+                          <input type="number" class="form-control" name="reduction" [(ngModel)]="serviceData.reduction" step="any" placeholder="Réduction">
                         </div>
                       </div>
                       <div class="col-lg-6">
                         <div class="input-group form-group-no-border input-lg">
-                          <input type="text" class="form-control" name="commission" [(ngModel)]="serviceData.commission" placeholder="Commission">
+                          <input type="number" class="form-control" name="price" [(ngModel)]="serviceData.price" step="any" placeholder="Prix">
                         </div>
                       </div>
                     </div>
+                    <div class="row">
+                      <div class="col-lg-6">
+                        <div class="input-group form-group-no-border input-lg">
+                          <input type="datetime-local" class="form-control" name="dateStart" [(ngModel)]="serviceData.dateStart" step="any" placeholder="Début">
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="input-group form-group-no-border input-lg">
+                          <input type="datetime-local" class="form-control" name="dateEnd" [(ngModel)]="serviceData.dateEnd" placeholder="Fin">
+                        </div>
+                      </div>
+                    </div>
+
+       <!-- Liste déroulante pour sélectionner un service -->
+  <div class="row">
+    <div class="col-lg-6">
+      
+        <select class="form-control" [(ngModel)]="selectedService">
+          <option value="" disabled selected>Choisir un service</option>
+          <!-- Boucle sur les services disponibles -->
+          <option *ngFor="let service of services" [ngValue]="service">{{ service.name }}</option>
+        </select>
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" type="button" (click)="addService()">Ajouter</button>
+        </div>
+      
+    </div>
+    <div class="col-lg-6 table-responsive">
+      <table class="table">
+        <thead class="text-primary">
+          <tr>
+            <th>Nom</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Boucle sur les services ajoutés -->
+          <tr *ngFor="let service of serviceData.services; let i = index">
+            <td>{{ service.name }}</td>
+            <input type="hidden" [ngModel]="service.objectId" name="objectId{{ i }}">
+            <td><button type="button" class="btn btn-danger" (click)="removeService(i)">Supprimer</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
