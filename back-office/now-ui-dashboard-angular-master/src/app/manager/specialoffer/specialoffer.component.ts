@@ -99,6 +99,25 @@ export class SpecialOfferComponent implements OnInit {
     );
   }
 
+  calculatePriceWithReduction() {
+    if (this.serviceData.reduction !== '') {
+      const price = this.serviceData.services.reduce((acc, service) => acc + service.cost, 0);
+      const reductionAmount = parseInt(this.serviceData.reduction);
+      const discountedPrice = price - (price * reductionAmount / 100);
+      this.serviceData.price = discountedPrice.toString();
+    }
+  }
+  
+  calculateReductionWithPrice() {
+    if (this.serviceData.price !== '') {
+      const price = this.serviceData.services.reduce((acc, service) => acc + service.cost, 0);
+      const serviceAmount = parseInt(this.serviceData.price);
+      const reductionPercentage = ((price - serviceAmount) / price) * 100;
+      this.serviceData.reduction = Math.round(reductionPercentage).toString();
+    }
+  }
+  
+
   isExpired(dateEnd: string): boolean {
     const now = new Date();
     const endDate = new Date(dateEnd);

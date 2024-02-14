@@ -21,7 +21,38 @@
                 </div>
                 <form (submit)="addSpecialOffer()" enctype="multipart/form-data">
                   <div class="modal-body">
-                    <h5>--</h5>
+                    <h5>Choix des services inclus</h5>
+                    <div class="row">
+                      <div class="col-lg-6">
+                        
+                          <select class="form-control" [(ngModel)]="selectedService">
+                            <option value="" disabled selected>Choisir un service</option>
+                            <option *ngFor="let service of services" [ngValue]="service">{{ service.name }}</option>
+                          </select>
+                          <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" (click)="addService()">Ajouter</button>
+                          </div>
+                        
+                      </div>
+                      <div class="col-lg-6 table-responsive" style="max-height: 200px; overflow-y: auto;">
+                        <table class="table table-sm"> 
+                          <thead class="text-primary">
+                            <tr>
+                              <th>Nom</th>
+                              <th>Action</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let service of serviceData.services; let i = index">
+                              <td>{{ service.name }}</td>
+                              <input type="hidden" [ngModel]="service.objectId" name="objectId{{ i }}">
+                              <td><button type="button" class="btn btn-sm btn-danger" (click)="removeService(i)">Supprimer</button></td> <!-- Utilisation de la classe btn-sm pour un bouton plus petit -->
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>                      
+                    </div>
+                    <h5>Informations générales</h5>
                     <div class="row">
                       <div class="col-lg-12">
                         <div class="input-group form-group-no-border input-lg">
@@ -37,12 +68,12 @@
                     <div class="row">
                       <div class="col-lg-6">
                         <div class="input-group form-group-no-border input-lg">
-                          <input type="number" class="form-control" name="reduction" [(ngModel)]="serviceData.reduction" step="any" placeholder="Réduction">
+                          <input type="number" class="form-control" name="reduction" [(ngModel)]="serviceData.reduction" step="any" placeholder="Réduction" (change)="calculatePriceWithReduction()">
                         </div>
                       </div>
                       <div class="col-lg-6">
                         <div class="input-group form-group-no-border input-lg">
-                          <input type="number" class="form-control" name="price" [(ngModel)]="serviceData.price" step="any" placeholder="Prix">
+                          <input type="number" class="form-control" name="price" [(ngModel)]="serviceData.price" step="any" placeholder="Prix" (change)="calculateReductionWithPrice()">
                         </div>
                       </div>
                     </div>
@@ -58,41 +89,6 @@
                         </div>
                       </div>
                     </div>
-
-       <!-- Liste déroulante pour sélectionner un service -->
-  <div class="row">
-    <div class="col-lg-6">
-      
-        <select class="form-control" [(ngModel)]="selectedService">
-          <option value="" disabled selected>Choisir un service</option>
-          <!-- Boucle sur les services disponibles -->
-          <option *ngFor="let service of services" [ngValue]="service">{{ service.name }}</option>
-        </select>
-        <div class="input-group-append">
-          <button class="btn btn-outline-secondary" type="button" (click)="addService()">Ajouter</button>
-        </div>
-      
-    </div>
-    <div class="col-lg-6 table-responsive">
-      <table class="table">
-        <thead class="text-primary">
-          <tr>
-            <th>Nom</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Boucle sur les services ajoutés -->
-          <tr *ngFor="let service of serviceData.services; let i = index">
-            <td>{{ service.name }}</td>
-            <input type="hidden" [ngModel]="service.objectId" name="objectId{{ i }}">
-            <td><button type="button" class="btn btn-danger" (click)="removeService(i)">Supprimer</button></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
