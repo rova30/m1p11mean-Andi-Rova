@@ -119,7 +119,10 @@
                       <h5 class="title">{{ specialOffer.name }}</h5>
                     </a>
                   </div>               
-                  <p class="text-center"><span class="badge badge-primary" style="margin-left: 5px ;" *ngFor="let service of specialOffer.services">{{ service.name }}</span></p>    
+                  <p class="text-center">
+                    <span class="badge badge-primary" style="margin-left: 5px ;" *ngFor="let service of specialOffer.services">{{ service.name }}</span>
+                  </p>
+                     
                   <p class="description"></p>              
                   <p class="description text-center">
                      {{ specialOffer.description }} 

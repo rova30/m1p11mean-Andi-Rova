@@ -46,14 +46,6 @@ router.get('/allSpecialOffers', async (req, res) => {
                                .aggregate([
                                   { $skip: skip },
                                   { $limit: pageSize },
-                                  { 
-                                    $lookup: {
-                                      from: 'Service',
-                                      localField: 'services',
-                                      foreignField: '_id',
-                                      as: 'services'
-                                    }
-                                  },
                                   {
                                     $project: {
                                       name: 1,
@@ -62,12 +54,13 @@ router.get('/allSpecialOffers', async (req, res) => {
                                       price: 1,
                                       dateStart: 1,
                                       dateEnd: 1,
-                                      'services.name': 1 
+                                      services: 1 
                                     }
                                   },
                                   { $sort: { dateEnd: -1 } } 
                                ])
                                .toArray();
+console.log(specialOffers);
     res.json(specialOffers);
     client.close();
   } catch (error) {
@@ -75,6 +68,7 @@ router.get('/allSpecialOffers', async (req, res) => {
     res.status(500).json({ error: 'Error fetching specialOffers' });
   }
 });
+
 
 router.get('/totalSpecialOffersCount', async (req, res) => {
   try {
