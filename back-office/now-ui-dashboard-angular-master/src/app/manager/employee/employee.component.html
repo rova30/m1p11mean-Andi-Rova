@@ -71,13 +71,14 @@
           </div>
 
         </div>
-        <div class="card-body">
-          <div *ngIf="loading" class="text-center mt-3">
-            <div class="spinner-border" role="status">
-              <span class="sr-only">Loading...</span>
-            </div>
+        <div *ngIf="loading" class="text-center mt-3">
+          <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
           </div>
-          <div class="row">
+        </div>
+
+        <div class="card-body">
+          <div class="row"  *ngIf="!loading">
             <div class="col-md-4" *ngFor="let employee of employees">
               <div class="card card-user">
                 <div class="card-body">
