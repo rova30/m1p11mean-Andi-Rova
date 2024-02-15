@@ -11,6 +11,7 @@ import { UpgradeComponent } from '../../manager/upgrade/upgrade.component';
 import { EmployeeComponent } from '../../manager/employee/employee.component';
 import { ServiceComponent } from '../../manager/service/service.component';
 import { CustomerComponent } from '../../manager/customer/customer.component';
+import { SpecialOfferComponent } from '../../manager/specialoffer/specialoffer.component';
 
 export const AdminLayoutRoutes: Routes = [
     { path: 'manager/dashboard',      component: DashboardComponent },
@@ -19,6 +20,7 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'manager/service',     component: ServiceComponent },
     { path: 'manager/customer',     component: CustomerComponent },
     { path: 'manager/employee',     component: EmployeeComponent },
+    { path: 'manager/specialoffer',     component: SpecialOfferComponent },
     { path: 'manager/typography',     component: TypographyComponent },
     { path: 'manager/icons',          component: IconsComponent },
     { path: 'manager/maps',           component: MapsComponent },

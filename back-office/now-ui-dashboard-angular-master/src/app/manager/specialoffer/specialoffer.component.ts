@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SpecialOfferService } from '../../api/specialoffer.service';
+import { ServiceService } from '../../api/service.service';
 
 @Component({
   selector: 'app-specialoffer',
@@ -7,94 +8,143 @@ import { SpecialOfferService } from '../../api/specialoffer.service';
   styleUrls: ['./specialoffer.component.css']
 })
 export class SpecialOfferComponent implements OnInit {
-    services: any[] = [];
-    error: string = '';
-    currentPage: number = 1;
-    pageSize: number = 10;
-    totalPages: number = 0;
+  specialOffers: any[] = [];
+  error: string = '';
+  currentPage: number = 1;
+  pageSize: number = 10;
+  totalPages: number = 0;
+  loading: boolean = false;
+  serviceData: any = {
+    name: '',
+    description: '',
+    reduction: '',
+    price: '',
+    dateStart: '',
+    dateEnd: '',
+    services: []
+  };
+
+  selectedService: any;
+  services: any[] = [];
+
+  constructor(private specialOfferService: SpecialOfferService, private serviceService: ServiceService) {}
+
+  ngOnInit() {
+    this.getSpecialOffersCount();
+    this.loadServices();
+  }
+
+  loadServices() {
+    this.serviceService.getServices(1, 100).subscribe(
+      (data: any[]) => {
+        this.services = data;
+      },
+      (error: any) => {
+        console.error('Error fetching services:', error);
+      }
+    );
+  }
+
+  addService() {
+    if (this.selectedService) {
+      this.serviceData.services.push(this.selectedService);
+      this.selectedService = null;
+    }
+  }
+
+  removeService(index: number) {
+    this.serviceData.services.splice(index, 1);
+  }
+
+  getSpecialOffersCount() {
+    this.specialOfferService.totalSpecialOffersCount().subscribe(
+      (count: number) => {
+        this.totalPages = Math.ceil(count / this.pageSize);
+        this.getSpecialOffers(this.currentPage, this.pageSize);
+      },
+      (error: any) => {
+        console.error('Error fetching total specialOffers count:', error);
+      }
+    );
+  }
+
+  getSpecialOffers(page: number, pageSize: number) {
+    this.error = '';
+    this.loading = true;
+
+    this.specialOfferService.getSpecialOffers(page, pageSize).subscribe(
+      (data: any[]) => {
+        this.specialOffers = data;
+        this.currentPage = page;
+        this.loading = false;
+      },
+      (error: any) => {
+        console.error('Error fetching specialOffers:', error);
+        this.error = 'Error fetching specialOffers';
+        this.loading = false;
+      }
+    );
+  }
+
+  addSpecialOffer() {
+    this.specialOfferService.addSpecialOffer(this.serviceData).subscribe(
+      (response) => {
+        console.log('service added successfully:', response);
+        this.resetForm();
+        this.getSpecialOffers(this.currentPage, this.pageSize);
+      },
+      (error) => {
+        console.error('Error adding service:', error);
+      }
+    );
+  }
+
+  calculatePriceWithReduction() {
+    if (this.serviceData.reduction !== '') {
+      const price = this.serviceData.services.reduce((acc, service) => acc + service.cost, 0);
+      const reductionAmount = parseInt(this.serviceData.reduction);
+      const discountedPrice = price - (price * reductionAmount / 100);
+      this.serviceData.price = discountedPrice.toString();
+    }
+  }
   
-    loading: boolean = false;
-    serviceData: any = {
+  calculateReductionWithPrice() {
+    if (this.serviceData.price !== '') {
+      const price = this.serviceData.services.reduce((acc, service) => acc + service.cost, 0);
+      const serviceAmount = parseInt(this.serviceData.price);
+      const reductionPercentage = ((price - serviceAmount) / price) * 100;
+      this.serviceData.reduction = Math.round(reductionPercentage).toString();
+    }
+  }
+  
+
+  isExpired(dateEnd: string): boolean {
+    const now = new Date();
+    const endDate = new Date(dateEnd);
+    return endDate < now;
+  }
+
+  resetForm() {
+    this.serviceData = {
       name: '',
-      deadline: '',
-      cost: '',
-      commission: ''
+      description: '',
+      reduction: '',
+      price: '',
+      dateStart: '',
+      dateEnd: '',
+      services: []
     };
-  
-    constructor(private serviceService: SpecialOfferService) { }
-  
-    ngOnInit() {
-      this.getServicesCount();
-    }
-  
-    getServicesCount() {
-      this.serviceService.totalServicesCount().subscribe(
-        (count: number) => {
-          this.totalPages = Math.ceil(count / this.pageSize);
-          this.getServices(this.currentPage, this.pageSize);
-        },
-        (error: any) => {
-          console.error('Error fetching total Services count:', error);
-        }
-      );
-    }
-  
-    getServices(page: number, pageSize: number) {
-      this.error = '';
-      this.loading = true;
-  
-      this.serviceService.getServices(page, pageSize).subscribe(
-        (data: any[]) => {
-          this.services = data;
-          this.currentPage = page;
-          this.loading = false;
-        },
-        (error: any) => {
-          console.error('Error fetching services:', error);
-          this.error = 'Error fetching services';
-          this.loading = false;
-        }
-      );
-    }
-  
-    addService() {
-        this.serviceService.addService(this.serviceData).subscribe(
-          (response) => {
-            console.log('service added successfully:', response);
-            this.resetForm();
-            this.getServices(this.currentPage, this.pageSize);
-          },
-          (error) => {
-            console.error('Error adding service:', error);
-           
-          }
-        );
-      }
+  }
 
+  prevPage() {
+    if (this.currentPage > 1) {
+      this.getSpecialOffers(this.currentPage - 1, this.pageSize);
+    }
+  }
 
-  
-    resetForm() {
-      this.serviceData = {
-        firstName: '',
-        lastName: '',
-        address: '',
-        contact: '',
-        email: '',
-        password: '',
-        photo: null
-      };
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.getSpecialOffers(this.currentPage + 1, this.pageSize);
     }
-  
-    prevPage() {
-      if (this.currentPage > 1) {
-        this.getServices(this.currentPage - 1, this.pageSize);
-      }
-    }
-  
-    nextPage() {
-      if (this.currentPage < this.totalPages) {
-        this.getServices(this.currentPage + 1, this.pageSize);
-      }
-    }
-  
+  }
 }

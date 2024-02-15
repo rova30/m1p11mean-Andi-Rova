@@ -6,7 +6,7 @@
         <div class="card-header">
           <h4 class="card-title">Liste des services</h4>
           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newServiceModal">
-            Nouveau service
+            Nouvelle offre spéciale
           </button>
 
           <div class="modal fade" id="newServiceModal" tabindex="-1" role="dialog" aria-labelledby="newServiceModalLabel"
@@ -14,35 +14,78 @@
             <div class="modal-dialog modal-lg" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="newServiceModalLabel">Ajout service</h5>
+                  <h5 class="modal-title" id="newServiceModalLabel">Offre spéciale</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
-                <form (submit)="addService()" enctype="multipart/form-data">
+                <form (submit)="addSpecialOffer()" enctype="multipart/form-data">
                   <div class="modal-body">
-                    <h5>--</h5>
+                    <h5>Choix des services inclus</h5>
                     <div class="row">
                       <div class="col-lg-6">
+                        
+                          <select class="form-control" [(ngModel)]="selectedService">
+                            <option value="" disabled selected>Choisir un service</option>
+                            <option *ngFor="let service of services" [ngValue]="service">{{ service.name }}</option>
+                          </select>
+                          <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" (click)="addService()">Ajouter</button>
+                          </div>
+                        
+                      </div>
+                      <div class="col-lg-6 table-responsive" style="max-height: 200px; overflow-y: auto;">
+                        <table class="table table-sm"> 
+                          <thead class="text-primary">
+                            <tr>
+                              <th>Nom</th>
+                              <th>Action</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let service of serviceData.services; let i = index">
+                              <td>{{ service.name }}</td>
+                              <input type="hidden" [ngModel]="service.objectId" name="objectId{{ i }}">
+                              <td><button type="button" class="btn btn-sm btn-danger" (click)="removeService(i)">Supprimer</button></td> <!-- Utilisation de la classe btn-sm pour un bouton plus petit -->
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>                      
+                    </div>
+                    <h5>Informations générales</h5>
+                    <div class="row">
+                      <div class="col-lg-12">
                         <div class="input-group form-group-no-border input-lg">
                           <input type="text" class="form-control" name="name" [(ngModel)]="serviceData.name" placeholder="Nom">
                         </div>
                       </div>
-                      <div class="col-lg-6">
+                      <div class="col-lg-12">
                         <div class="input-group form-group-no-border input-lg">
-                          <input type="number" class="form-control" name="deadline" [(ngModel)]="serviceData.deadline" step="any" placeholder="Durée">
+                          <input type="text" class="form-control" name="description" [(ngModel)]="serviceData.description" step="any" placeholder="Description">
                         </div>
                       </div>
                     </div>
                     <div class="row">
                       <div class="col-lg-6">
                         <div class="input-group form-group-no-border input-lg">
-                          <input type="number" class="form-control" name="cost" [(ngModel)]="serviceData.cost" step="any" placeholder="Prix">
+                          <input type="number" class="form-control" name="reduction" [(ngModel)]="serviceData.reduction" step="any" placeholder="Réduction" (change)="calculatePriceWithReduction()">
                         </div>
                       </div>
                       <div class="col-lg-6">
                         <div class="input-group form-group-no-border input-lg">
-                          <input type="text" class="form-control" name="commission" [(ngModel)]="serviceData.commission" placeholder="Commission">
+                          <input type="number" class="form-control" name="price" [(ngModel)]="serviceData.price" step="any" placeholder="Prix" (change)="calculateReductionWithPrice()">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-lg-6">
+                        <div class="input-group form-group-no-border input-lg">
+                          <input type="datetime-local" class="form-control" name="dateStart" [(ngModel)]="serviceData.dateStart" step="any" placeholder="Début">
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="input-group form-group-no-border input-lg">
+                          <input type="datetime-local" class="form-control" name="dateEnd" [(ngModel)]="serviceData.dateEnd" placeholder="Fin">
                         </div>
                       </div>
                     </div>
@@ -64,24 +107,29 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-4" *ngFor="let service of services">
-              <div class="card card-user">
+            <div class="col-md-4" *ngFor="let specialOffer of specialOffers" >
+              <div class="card card-user" [ngClass]="{'expired': isExpired(specialOffer.dateEnd)}">
                 <div class="card-body">
                   <div class="author">
                     <a href="#">
-                      <h5 class="title">{{ service.name }}</h5>
+                      <h5 class="title">{{ specialOffer.name }}</h5>
                     </a>
-                  </div>              
+                  </div>               
+                  <p class="text-center">
+                    <span class="badge badge-primary" style="margin-left: 5px ;" *ngFor="let service of specialOffer.services">{{ service.name }}</span>
+                  </p>
+                     
+                  <p class="description"></p>              
                   <p class="description text-center">
-                    Durée : {{ service.deadline }} mn
+                     {{ specialOffer.description }} 
                     <br>
-                    Prix normal : {{ service.cost }} Ar
+                    Prix : {{ specialOffer.price }} Ar ou {{ specialOffer.reduction }} % de réduction 
                     <br>
-                    Commission : {{ service.commission }} %
+                    {{ specialOffer.dateStart | date: 'dd/MM/yyyy' }} - {{ specialOffer.dateEnd | date: 'dd/MM/yyyy' }}
                   </p>
                 </div>
               </div>
-            </div>
+            </div>            
           </div>
           <div class="row">
             <div class="col-md-12" *ngIf="!loading">
