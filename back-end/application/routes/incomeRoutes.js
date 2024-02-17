@@ -62,15 +62,21 @@ router.get('/categoriesIncomelist', async (req, res) => {
   }
 });
 
-router.get('/incomesByMonth', async (req, res) => {
+router.get('/incomesByMonth/:year', async (req, res) => {
   try {
     const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
     const db = client.db('finalexam');
+    const year = parseInt(req.params.year);
+
     const incomesByMonth = await db.collection('Incomes').aggregate([
+      {
+        $match: {
+          $expr: { $eq: [{ $year: "$dateTime" }, year] }
+        }
+      },
       {
         $group: {
           _id: {
-            year: { $year: "$dateTime" },
             month: { $month: "$dateTime" }
           },
           totalAmount: { $sum: "$amount" }
@@ -79,18 +85,17 @@ router.get('/incomesByMonth', async (req, res) => {
       {
         $project: {
           _id: 0,
-          year: "$_id.year",
           month: "$_id.month",
           totalAmount: 1
         }
       }
     ]).toArray();
-    console.log(incomesByMonth);
+
     res.json(incomesByMonth);
     client.close();
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error fetching incomes by month' });
+    res.status(500).json({ error: 'Error fetching incomes by year' });
   }
 });
 

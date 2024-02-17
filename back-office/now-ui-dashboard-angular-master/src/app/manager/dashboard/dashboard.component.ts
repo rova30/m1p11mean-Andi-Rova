@@ -48,7 +48,7 @@ export class DashboardComponent implements OnInit {
       const selectedMonth = this.lineBigDashboardChartLabels[clickedIndex];
       const currentYear = new Date().getFullYear(); // Récupérer l'année en cours
 
-      this.incomeService.getIncomesByYearAndMonth(currentYear, clickedIndex + 1).subscribe(data => {
+      this.incomeService.getIncomesByYearAndMonth(this.selectedYear, clickedIndex + 1).subscribe(data => {
         console.log('Montants par jour pour le mois', selectedMonth, ':', data);
         this.openModalWithData(selectedMonth, data);
       });
@@ -82,6 +82,53 @@ export class DashboardComponent implements OnInit {
     this.lineBigDashboardChartLabels = [];
   }
 
+// Déclaration des variables
+availableYears: number[] = [];
+selectedYear: number = new Date().getFullYear();
+
+// Méthode pour initialiser les années disponibles
+initAvailableYears(): void {
+  const currentYear = new Date().getFullYear();
+  this.availableYears = Array.from({ length: 3 }, (_, i) => currentYear - i); // Par exemple, les 3 années précédentes
+}
+
+// Méthode pour mettre à jour les données en fonction de l'année sélectionnée
+updateChartData(): void {
+  this.getIncomesByMonth(this.selectedYear);
+}
+
+// Méthode pour écouter les changements de sélection dans la liste déroulante
+onYearChange(event: any): void {
+  this.selectedYear = event.target.value; // Mettre à jour l'année sélectionnée
+  this.updateChartData(); // Mettre à jour les données du graphique
+}
+
+// Méthode pour récupérer les revenus par mois pour une année donnée
+getIncomesByMonth(year: number): void {
+  this.incomeService.getIncomesByMonth(year).subscribe((data) => {
+    const months = Array.from({ length: 12 }, (_, i) => i + 1);
+    const incomeData = months.map(month => {
+      const monthData = data.find(item => item.month === month);
+      return monthData ? monthData.totalAmount : 0;
+    });
+
+    this.lineBigDashboardChartData = [
+      {
+        label: "Data",
+        pointBorderWidth: 1,
+        pointHoverRadius: 7,
+        pointHoverBorderWidth: 2,
+        pointRadius: 5,
+        fill: true,
+        borderWidth: 2,
+        data: incomeData
+      }
+    ];
+
+    this.lineBigDashboardChartLabels = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+  });
+}
+
 
   ngOnInit() {
     this.chartColor = "#FFFFFF";
@@ -99,30 +146,10 @@ export class DashboardComponent implements OnInit {
     
 
     const currentYear = new Date().getFullYear();
-    this.incomeService.getIncomesByMonth().subscribe((data) => {
-      const months = Array.from({ length: 12 }, (_, i) => i + 1);
-      const incomeData = months.map(month => {
-        const monthData = data.find(item => item.year === currentYear && item.month === month);
-        return monthData ? monthData.totalAmount : 0;
-      });
-    
-      this.lineBigDashboardChartData = [
-        {
-          label: "Data",
-          pointBorderWidth: 1,
-          pointHoverRadius: 7,
-          pointHoverBorderWidth: 2,
-          pointRadius: 5,
-          fill: true,
-          borderWidth: 2,
-          data: incomeData
-        }
-      ];
-    
-      this.lineBigDashboardChartLabels = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
-    });
-    
-    
+    this.initAvailableYears(); // Initialiser les années disponibles
+    this.updateChartData(); // Mettre à jour les données du graphique avec l'année sélectionnée par défaut
+
+
     this.lineBigDashboardChartOptions = {
 
           layout: {

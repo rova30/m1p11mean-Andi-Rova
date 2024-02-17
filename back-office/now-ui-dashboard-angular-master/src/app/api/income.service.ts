@@ -11,8 +11,8 @@ export class IncomeService {
 
   constructor(private http: HttpClient) { }
 
-  getIncomesByMonth(): Observable<any[]> {
-    return this.http.get<any[]>(`${baseUrl('/incomes/incomesByMonth')}`).pipe(
+  getIncomesByMonth(year: number): Observable<any[]> {
+    return this.http.get<any[]>(`${baseUrl('/incomes/incomesByMonth/' + year)}`).pipe(
         catchError(this.handleError)
       );
   }
