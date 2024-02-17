@@ -18,6 +18,7 @@ import { EmployeeComponent } from '../../manager/employee/employee.component';
 import { CustomerComponent } from '../../manager/customer/customer.component';
 import { ServiceComponent } from '../../manager/service/service.component';
 import { SpecialOfferComponent } from '../../manager/specialoffer/specialoffer.component';
+import { ModalcaComponent } from '../../manager/modalca/modalca.component';
 import { EmployeeService } from '../../api/employee.service';
 import { CustomerService } from '../../api/customer.service';
 import { ManagerService } from '../../api/manager.service';
@@ -46,6 +47,7 @@ import { SpecialOfferService } from '../../api/specialoffer.service';
     IconsComponent,
     MapsComponent,
     NotificationsComponent,
+    ModalcaComponent
   ]
 })
 

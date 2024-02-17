@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import * as Chartist from 'chartist';
+import { IncomeService } from '../../api/income.service';
+import { ModalcaComponent } from '../modalca/modalca.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-dashboard',
@@ -38,10 +41,27 @@ export class DashboardComponent implements OnInit {
   public lineChartGradientsNumbersOptions:any;
   public lineChartGradientsNumbersLabels:Array<any>;
   public lineChartGradientsNumbersColors:Array<any>
-  // events
-  public chartClicked(e:any):void {
-    console.log(e);
+
+  public chartClicked(event: any): void {
+    if (event.active && event.active.length > 0) {
+      const clickedIndex = event.active[0]._index;
+      const selectedMonth = this.lineBigDashboardChartLabels[clickedIndex];
+      const currentYear = new Date().getFullYear(); // Récupérer l'année en cours
+
+      this.incomeService.getIncomesByYearAndMonth(currentYear, clickedIndex + 1).subscribe(data => {
+        console.log('Montants par jour pour le mois', selectedMonth, ':', data);
+        this.openModalWithData(selectedMonth, data);
+      });
+    }
   }
+
+  private openModalWithData(month: string, dailyAmounts: any[]): void {
+    const modalRef = this.modalService.open(ModalcaComponent, { centered: true, backdrop: false }); 
+    modalRef.componentInstance.selectedMonth = month; 
+    modalRef.componentInstance.dailyAmounts = dailyAmounts; 
+  }
+  
+  
 
   public chartHovered(e:any):void {
     console.log(e);
@@ -57,7 +77,11 @@ export class DashboardComponent implements OnInit {
       return "rgb(" + r + ", " + g + ", " + b + ")";
     }
   }
-  constructor() { }
+  constructor(private incomeService: IncomeService, private modalService: NgbModal) {
+    this.lineBigDashboardChartData = [];
+    this.lineBigDashboardChartLabels = [];
+  }
+
 
   ngOnInit() {
     this.chartColor = "#FFFFFF";
@@ -72,31 +96,33 @@ export class DashboardComponent implements OnInit {
     this.gradientFill.addColorStop(0, "rgba(128, 182, 244, 0)");
     this.gradientFill.addColorStop(1, "rgba(255, 255, 255, 0.24)");
 
-    this.lineBigDashboardChartData = [
+    
+
+    const currentYear = new Date().getFullYear();
+    this.incomeService.getIncomesByMonth().subscribe((data) => {
+      const months = Array.from({ length: 12 }, (_, i) => i + 1);
+      const incomeData = months.map(month => {
+        const monthData = data.find(item => item.year === currentYear && item.month === month);
+        return monthData ? monthData.totalAmount : 0;
+      });
+    
+      this.lineBigDashboardChartData = [
         {
           label: "Data",
-
           pointBorderWidth: 1,
           pointHoverRadius: 7,
           pointHoverBorderWidth: 2,
           pointRadius: 5,
           fill: true,
-
           borderWidth: 2,
-          data: [50, 150, 100, 190, 130, 90, 150, 160, 120, 140, 190, 95]
+          data: incomeData
         }
       ];
-      this.lineBigDashboardChartColors = [
-       {
-         backgroundColor: this.gradientFill,
-         borderColor: this.chartColor,
-         pointBorderColor: this.chartColor,
-         pointBackgroundColor: "#2c2c2c",
-         pointHoverBackgroundColor: "#2c2c2c",
-         pointHoverBorderColor: this.chartColor,
-       }
-     ];
-    this.lineBigDashboardChartLabels = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+    
+      this.lineBigDashboardChartLabels = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+    });
+    
+    
     this.lineBigDashboardChartOptions = {
 
           layout: {
@@ -413,6 +439,7 @@ export class DashboardComponent implements OnInit {
     this.lineChartGradientsNumbersType = 'bar';
   }
 
+  
   ngOnDestroy():void {
   }
 
