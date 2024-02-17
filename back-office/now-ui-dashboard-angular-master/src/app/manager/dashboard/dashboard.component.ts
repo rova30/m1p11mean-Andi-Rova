@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import * as Chartist from 'chartist';
 import { IncomeService } from '../../api/income.service';
+import { AppointmentService } from '../../api/appointment.service';
 import { ModalcaComponent } from '../modalca/modalca.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -77,9 +78,11 @@ export class DashboardComponent implements OnInit {
       return "rgb(" + r + ", " + g + ", " + b + ")";
     }
   }
-  constructor(private incomeService: IncomeService, private modalService: NgbModal) {
+  constructor(private incomeService: IncomeService, private modalService: NgbModal, private appointmentService: AppointmentService) {
     this.lineBigDashboardChartData = [];
     this.lineBigDashboardChartLabels = [];
+    this.lineChartGradientsNumbersData = [];
+    this.lineChartGradientsNumbersLabels = [];
   }
 
 // Déclaration des variables
@@ -114,7 +117,7 @@ getIncomesByMonth(year: number): void {
 
     this.lineBigDashboardChartData = [
       {
-        label: "Data",
+        label: "Montant",
         pointBorderWidth: 1,
         pointHoverRadius: 7,
         pointHoverBorderWidth: 2,
@@ -129,6 +132,30 @@ getIncomesByMonth(year: number): void {
   });
 }
 
+
+getAppointmentsByMonth(year:number): void {
+  this.appointmentService.getAppointmentsByMonth(year).subscribe((data) => {
+    const months = Array.from({ length: 12 }, (_, i) => i + 1);
+    const appointmentData = months.map(month => {
+      const monthData = data.find(item => item.month === month);
+      return monthData ? monthData.totalAmount : 0;
+    });
+    
+  this.lineChartGradientsNumbersData = [
+    {
+      label: "Nombre",
+      pointBorderWidth: 2,
+      pointHoverRadius: 4,
+      pointHoverBorderWidth: 1,
+      pointRadius: 4,
+      fill: true,
+      borderWidth: 1,
+      data: appointmentData
+    }];
+
+    this.lineChartGradientsNumbersLabels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  });
+  }
 
   ngOnInit() {
     this.chartColor = "#FFFFFF";
