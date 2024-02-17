@@ -1,11 +1,10 @@
 <div class="panel-header panel-header-lg">
   <div class="text-center">
-    <h5  style="color: aliceblue;">Chiffre d'affaire</h5>
+    <label for="yearSelect" class="h6"  style="color: aliceblue;">Chiffre d'affaire</label>
     <select id="yearSelect" (change)="onYearChange($event)">
       <option *ngFor="let year of availableYears" [value]="year" [selected]="year === selectedYear">{{ year }}</option>
     </select>
   </div>
-  
     <canvas baseChart id="bigDashboardChart"
                 [datasets]="lineBigDashboardChartData"
                 [labels]="lineBigDashboardChartLabels"
@@ -19,7 +18,7 @@
 <br><br>
 <div class="main-content">
   <div class="row">
-    <div class="col-lg-12">
+    <div class="col-lg-4">
       <div class="card card-chart">
         <div class="card-header">
           <h5 class="card-category">Global Sales</h5>
