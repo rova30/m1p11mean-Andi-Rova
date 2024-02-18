@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import * as Chartist from 'chartist';
+import { IncomeService } from '../../api/income.service';
+import { AppointmentService } from '../../api/appointment.service';
+import { ModalcaComponent } from '../modalca/modalca.component';
+import { ModalrdvComponent } from '../modalrdv/modalrdv.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-dashboard',
@@ -38,10 +43,46 @@ export class DashboardComponent implements OnInit {
   public lineChartGradientsNumbersOptions:any;
   public lineChartGradientsNumbersLabels:Array<any>;
   public lineChartGradientsNumbersColors:Array<any>
-  // events
-  public chartClicked(e:any):void {
-    console.log(e);
+
+  public chartClicked(event: any): void {
+    if (event.active && event.active.length > 0) {
+      const clickedIndex = event.active[0]._index;
+      const selectedMonth = this.lineBigDashboardChartLabels[clickedIndex];
+      const currentYear = new Date().getFullYear(); // Récupérer l'année en cours
+
+      this.incomeService.getIncomesByYearAndMonth(this.selectedYear, clickedIndex + 1).subscribe(data => {
+        console.log('Montants par jour pour le mois', selectedMonth, ':', data);
+        this.openModalWithData(selectedMonth, data);
+      });
+    }
   }
+
+  public chartClicked1(event: any): void {
+    if (event.active && event.active.length > 0) {
+      const clickedIndex = event.active[0]._index;
+      const selectedMonth = this.lineChartGradientsNumbersLabels[clickedIndex];
+      const currentYear = new Date().getFullYear(); // Récupérer l'année en cours
+
+      this.appointmentService.getAppointmentsByYearAndMonth(this.selectedYear, clickedIndex + 1).subscribe(data => {
+        console.log('Réservations par jour pour le mois', selectedMonth, ':', data);
+        this.openModalWithData1(selectedMonth, data);
+      });
+    }
+  }
+
+  private openModalWithData(month: string, dailyAmounts: any[]): void {
+    const modalRef = this.modalService.open(ModalcaComponent, { centered: true, backdrop: false }); 
+    modalRef.componentInstance.selectedMonth = month; 
+    modalRef.componentInstance.dailyAmounts = dailyAmounts; 
+  }
+
+  private openModalWithData1(month: string, dailyAmounts: any[]): void {
+    const modalRef = this.modalService.open(ModalrdvComponent, { centered: true, backdrop: false }); 
+    modalRef.componentInstance.selectedMonth = month; 
+    modalRef.componentInstance.dailyAmounts = dailyAmounts; 
+  }
+  
+  
 
   public chartHovered(e:any):void {
     console.log(e);
@@ -57,7 +98,86 @@ export class DashboardComponent implements OnInit {
       return "rgb(" + r + ", " + g + ", " + b + ")";
     }
   }
-  constructor() { }
+  constructor(private incomeService: IncomeService, private modalService: NgbModal, private appointmentService: AppointmentService) {
+    this.lineBigDashboardChartData = [];
+    this.lineBigDashboardChartLabels = [];
+    this.lineChartGradientsNumbersData = [];
+    this.lineChartGradientsNumbersLabels = [];
+  }
+
+
+availableYears: number[] = [];
+selectedYear: number = new Date().getFullYear();
+
+
+initAvailableYears(): void {
+  const currentYear = new Date().getFullYear();
+  this.availableYears = Array.from({ length: 3 }, (_, i) => currentYear - i); 
+}
+
+
+updateChartData(): void {
+  this.getIncomesByMonth(this.selectedYear);
+  this.getAppointmentsByMonth(this.selectedYear);
+}
+
+
+onYearChange(event: any): void {
+  this.selectedYear = event.target.value; 
+  this.updateChartData(); 
+}
+
+
+getIncomesByMonth(year: number): void {
+  this.incomeService.getIncomesByMonth(year).subscribe((data) => {
+    const months = Array.from({ length: 12 }, (_, i) => i + 1);
+    const incomeData = months.map(month => {
+      const monthData = data.find(item => item.month === month);
+      return monthData ? monthData.totalAmount : 0;
+    });
+
+    this.lineBigDashboardChartData = [
+      {
+        label: "Montant",
+        pointBorderWidth: 1,
+        pointHoverRadius: 7,
+        pointHoverBorderWidth: 2,
+        pointRadius: 5,
+        fill: true,
+        borderWidth: 2,
+        data: incomeData
+      }
+    ];
+
+    this.lineBigDashboardChartLabels = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+  });
+}
+
+
+getAppointmentsByMonth(year:number): void {
+  this.appointmentService.getAppointmentsByMonth(year).subscribe((data) => {
+    const months = Array.from({ length: 12 }, (_, i) => i + 1);
+    const appointmentData = months.map(month => {
+      const monthData = data.find(item => item.month === month);
+      return monthData ? monthData.totalAppointments : 0;
+    });
+    console.log(appointmentData);
+
+  this.lineChartGradientsNumbersData = [
+    {
+      label: "Nombre",
+      pointBorderWidth: 2,
+      pointHoverRadius: 4,
+      pointHoverBorderWidth: 1,
+      pointRadius: 4,
+      fill: true,
+      borderWidth: 1,
+      data: appointmentData
+    }];
+
+    this.lineChartGradientsNumbersLabels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  });
+  }
 
   ngOnInit() {
     this.chartColor = "#FFFFFF";
@@ -72,31 +192,13 @@ export class DashboardComponent implements OnInit {
     this.gradientFill.addColorStop(0, "rgba(128, 182, 244, 0)");
     this.gradientFill.addColorStop(1, "rgba(255, 255, 255, 0.24)");
 
-    this.lineBigDashboardChartData = [
-        {
-          label: "Data",
+    
 
-          pointBorderWidth: 1,
-          pointHoverRadius: 7,
-          pointHoverBorderWidth: 2,
-          pointRadius: 5,
-          fill: true,
+    const currentYear = new Date().getFullYear();
+    this.initAvailableYears(); // Initialiser les années disponibles
+    this.updateChartData(); // Mettre à jour les données du graphique avec l'année sélectionnée par défaut
 
-          borderWidth: 2,
-          data: [50, 150, 100, 190, 130, 90, 150, 160, 120, 140, 190, 95]
-        }
-      ];
-      this.lineBigDashboardChartColors = [
-       {
-         backgroundColor: this.gradientFill,
-         borderColor: this.chartColor,
-         pointBorderColor: this.chartColor,
-         pointBackgroundColor: "#2c2c2c",
-         pointHoverBackgroundColor: "#2c2c2c",
-         pointHoverBorderColor: this.chartColor,
-       }
-     ];
-    this.lineBigDashboardChartLabels = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+
     this.lineBigDashboardChartOptions = {
 
           layout: {
@@ -341,18 +443,7 @@ export class DashboardComponent implements OnInit {
     this.gradientFill.addColorStop(1, this.hexToRGB('#2CA8FF', 0.6));
 
 
-    this.lineChartGradientsNumbersData = [
-        {
-          label: "Active Countries",
-          pointBorderWidth: 2,
-          pointHoverRadius: 4,
-          pointHoverBorderWidth: 1,
-          pointRadius: 4,
-          fill: true,
-          borderWidth: 1,
-          data: [80, 99, 86, 96, 123, 85, 100, 75, 88, 90, 123, 155]
-        }
-      ];
+
     this.lineChartGradientsNumbersColors = [
      {
        backgroundColor: this.gradientFill,
@@ -361,8 +452,8 @@ export class DashboardComponent implements OnInit {
        pointBackgroundColor: "#2CA8FF",
      }
    ];
-    this.lineChartGradientsNumbersLabels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    this.lineChartGradientsNumbersOptions = {
+
+   this.lineChartGradientsNumbersOptions = {
         maintainAspectRatio: false,
         legend: {
           display: false
@@ -413,6 +504,7 @@ export class DashboardComponent implements OnInit {
     this.lineChartGradientsNumbersType = 'bar';
   }
 
+  
   ngOnDestroy():void {
   }
 

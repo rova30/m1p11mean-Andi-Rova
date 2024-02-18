@@ -12,6 +12,8 @@ const employeeRoutes = require('./routes/employeeRoutes');
 const managerRoutes = require('./routes/managerRoutes');
 const specialOfferRoutes = require('./routes/specialOfferRoutes');
 const preferenceRoutes = require('./routes/preferenceRoutes');
+const incomeRoutes = require('./routes/incomeRoutes');
+const appointmentRoutes = require('./routes/appointmentRoutes');
 
 // Utiliser cors pour autoriser les requêtes de différents domaines
 app.use(cors());
@@ -24,6 +26,8 @@ app.use('/services', serviceRoutes);
 app.use('/employees', employeeRoutes);
 app.use('/specialOffers', specialOfferRoutes);
 app.use('/preferences', preferenceRoutes);
+app.use('/incomes', incomeRoutes);
+app.use('/appointments', appointmentRoutes);
 
 // Démarrer le serveur
 app.listen(port, () => {
