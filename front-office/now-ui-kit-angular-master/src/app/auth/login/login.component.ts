@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import * as authService from '../../api/auth.service';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent implements OnInit {
 
@@ -61,7 +62,6 @@ export class LoginComponent implements OnInit {
     ngOnInit() {
         var body = document.getElementsByTagName('body')[0];
         body.classList.add('login-page');
-
     }
     ngOnDestroy(){
         var body = document.getElementsByTagName('body')[0];

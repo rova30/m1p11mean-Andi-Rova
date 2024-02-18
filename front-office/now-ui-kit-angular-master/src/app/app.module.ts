@@ -11,8 +11,11 @@ import { NavbarComponent } from './shared/navbar/navbar.component';
 import { AuthService } from './api/auth.service';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthModule } from './auth/auth.module';
+import { BrowserModule } from '@angular/platform-browser';
+import { environment } from 'environments/environment';
+import {initializeApp} from 'firebase/app';
 
-
+initializeApp(environment.firebase);
 
 @NgModule({
     declarations: [
@@ -20,6 +23,7 @@ import { AuthModule } from './auth/auth.module';
         NavbarComponent
     ],
     imports: [
+        BrowserModule,
         BrowserAnimationsModule,
         NgbModule,
         FormsModule,
@@ -28,9 +32,11 @@ import { AuthModule } from './auth/auth.module';
         AppRoutingModule,
         ComponentsModule,
         ExamplesModule,
-        AuthModule
+        AuthModule,
     ],
-    providers: [AuthService],
+    providers: [
+        AuthService
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule { }
