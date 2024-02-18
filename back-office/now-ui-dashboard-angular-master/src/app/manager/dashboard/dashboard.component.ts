@@ -3,6 +3,7 @@ import * as Chartist from 'chartist';
 import { IncomeService } from '../../api/income.service';
 import { AppointmentService } from '../../api/appointment.service';
 import { ModalcaComponent } from '../modalca/modalca.component';
+import { ModalrdvComponent } from '../modalrdv/modalrdv.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -56,8 +57,27 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  public chartClicked1(event: any): void {
+    if (event.active && event.active.length > 0) {
+      const clickedIndex = event.active[0]._index;
+      const selectedMonth = this.lineChartGradientsNumbersLabels[clickedIndex];
+      const currentYear = new Date().getFullYear(); // Récupérer l'année en cours
+
+      this.appointmentService.getAppointmentsByYearAndMonth(this.selectedYear, clickedIndex + 1).subscribe(data => {
+        console.log('Réservations par jour pour le mois', selectedMonth, ':', data);
+        this.openModalWithData1(selectedMonth, data);
+      });
+    }
+  }
+
   private openModalWithData(month: string, dailyAmounts: any[]): void {
     const modalRef = this.modalService.open(ModalcaComponent, { centered: true, backdrop: false }); 
+    modalRef.componentInstance.selectedMonth = month; 
+    modalRef.componentInstance.dailyAmounts = dailyAmounts; 
+  }
+
+  private openModalWithData1(month: string, dailyAmounts: any[]): void {
+    const modalRef = this.modalService.open(ModalrdvComponent, { centered: true, backdrop: false }); 
     modalRef.componentInstance.selectedMonth = month; 
     modalRef.componentInstance.dailyAmounts = dailyAmounts; 
   }
@@ -85,28 +105,29 @@ export class DashboardComponent implements OnInit {
     this.lineChartGradientsNumbersLabels = [];
   }
 
-// Déclaration des variables
+
 availableYears: number[] = [];
 selectedYear: number = new Date().getFullYear();
 
-// Méthode pour initialiser les années disponibles
+
 initAvailableYears(): void {
   const currentYear = new Date().getFullYear();
-  this.availableYears = Array.from({ length: 3 }, (_, i) => currentYear - i); // Par exemple, les 3 années précédentes
+  this.availableYears = Array.from({ length: 3 }, (_, i) => currentYear - i); 
 }
 
-// Méthode pour mettre à jour les données en fonction de l'année sélectionnée
+
 updateChartData(): void {
   this.getIncomesByMonth(this.selectedYear);
+  this.getAppointmentsByMonth(this.selectedYear);
 }
 
-// Méthode pour écouter les changements de sélection dans la liste déroulante
+
 onYearChange(event: any): void {
-  this.selectedYear = event.target.value; // Mettre à jour l'année sélectionnée
-  this.updateChartData(); // Mettre à jour les données du graphique
+  this.selectedYear = event.target.value; 
+  this.updateChartData(); 
 }
 
-// Méthode pour récupérer les revenus par mois pour une année donnée
+
 getIncomesByMonth(year: number): void {
   this.incomeService.getIncomesByMonth(year).subscribe((data) => {
     const months = Array.from({ length: 12 }, (_, i) => i + 1);
@@ -138,9 +159,10 @@ getAppointmentsByMonth(year:number): void {
     const months = Array.from({ length: 12 }, (_, i) => i + 1);
     const appointmentData = months.map(month => {
       const monthData = data.find(item => item.month === month);
-      return monthData ? monthData.totalAmount : 0;
+      return monthData ? monthData.totalAppointments : 0;
     });
-    
+    console.log(appointmentData);
+
   this.lineChartGradientsNumbersData = [
     {
       label: "Nombre",
@@ -421,18 +443,7 @@ getAppointmentsByMonth(year:number): void {
     this.gradientFill.addColorStop(1, this.hexToRGB('#2CA8FF', 0.6));
 
 
-    this.lineChartGradientsNumbersData = [
-        {
-          label: "Active Countries",
-          pointBorderWidth: 2,
-          pointHoverRadius: 4,
-          pointHoverBorderWidth: 1,
-          pointRadius: 4,
-          fill: true,
-          borderWidth: 1,
-          data: [80, 99, 86, 96, 123, 85, 100, 75, 88, 90, 123, 155]
-        }
-      ];
+
     this.lineChartGradientsNumbersColors = [
      {
        backgroundColor: this.gradientFill,
@@ -441,8 +452,8 @@ getAppointmentsByMonth(year:number): void {
        pointBackgroundColor: "#2CA8FF",
      }
    ];
-    this.lineChartGradientsNumbersLabels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    this.lineChartGradientsNumbersOptions = {
+
+   this.lineChartGradientsNumbersOptions = {
         maintainAspectRatio: false,
         legend: {
           display: false

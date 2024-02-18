@@ -90,7 +90,6 @@ router.get('/incomesByMonth/:year', async (req, res) => {
         }
       }
     ]).toArray();
-
     res.json(incomesByMonth);
     client.close();
   } catch (error) {
@@ -128,7 +127,7 @@ router.get('/incomesByYearAndMonth/:year/:month', async (req, res) => {
         }
       }
     ]).toArray();
-
+console.log(incomesByYearAndMonth);
     res.json(incomesByYearAndMonth);
     client.close();
   } catch (error) {
