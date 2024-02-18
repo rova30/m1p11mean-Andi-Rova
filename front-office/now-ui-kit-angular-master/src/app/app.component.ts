@@ -4,6 +4,8 @@ import { DOCUMENT } from '@angular/common';
 import { Location } from '@angular/common';
 import { NavbarComponent } from './shared/navbar/navbar.component';
 import { filter, Subscription } from 'rxjs';
+import {getMessaging, getToken} from 'firebase/messaging';
+import { environment } from 'environments/environment';
 
 @Component({
     selector: 'app-root',
@@ -15,11 +17,13 @@ export class AppComponent implements OnInit {
     @ViewChild(NavbarComponent) navbar: NavbarComponent;
 
     constructor( private renderer : Renderer2, private router: Router, @Inject(DOCUMENT,) private document: any, private element : ElementRef, public location: Location) {}
-    ngOnInit() {
-        var navbar : HTMLElement = this.element.nativeElement.children[0].children[0];
 
+    ngOnInit() {
+    this.requestPermission();
+    var navbar : HTMLElement = this.element.nativeElement.children[0].children[0];
         // Ajouter une condition initiale pour gérer la visibilité du navbar
     if (this.location.path() === '/login' || this.location.path() === '/signin') {
+        navbar.classList.remove('navbar-transparent');
         navbar.style.display = 'none'; // Masquer le navbar si la route est "/login"
     }
 
@@ -61,4 +65,19 @@ export class AppComponent implements OnInit {
             });
         });
     }
+    requestPermission() {
+        const messaging = getMessaging();
+        getToken(messaging,{vapidKey: environment.firebase.vapidKey}).then(
+            (currentToken) => {
+                if(currentToken){
+                    console.log("I have token");
+                    console.log(currentToken);
+                }else{
+                    console.log("we have a problem")
+                }
+            }
+        )
+    }
+
+
 }
