@@ -10,8 +10,8 @@ import { baseUrl } from './global_config';
 export class AuthService {
   constructor(private http: HttpClient) { }
 
-  signInCustomer(lastName: string, firstName: string, contact: string, email: string, password: string) {
-    const data = { lastName, firstName, contact, email, password };
+  signInCustomer(lastName: string, firstName: string, contact: string, email: string, password: string, fcmToken: string) {
+    const data = { lastName, firstName, contact, email, password, fcmToken };
     return this.http.post(baseUrl('/customers/signin'), data)
     .pipe(
       map((response: any) => {
