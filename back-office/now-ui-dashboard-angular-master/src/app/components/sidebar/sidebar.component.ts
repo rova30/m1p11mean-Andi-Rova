@@ -12,6 +12,7 @@ export const ROUTES: RouteInfo[] = [
     { path: '/manager/specialoffer', title: 'Offre spécial',  icon:'design_bullet-list-67', class: '' },
     { path: '/manager/customer', title: 'Clients',  icon:'users_circle-08', class: '' },
     { path: '/manager/employee', title: 'Employés',  icon:'users_circle-08', class: '' },
+    { path: '/manager/category', title: 'Catégories',  icon:'users_circle-08', class: '' },
 ];
 
 @Component({
