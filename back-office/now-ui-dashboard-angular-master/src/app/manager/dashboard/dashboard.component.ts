@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import * as Chartist from 'chartist';
 import { IncomeService } from '../../api/income.service';
 import { AppointmentService } from '../../api/appointment.service';
+import { ExpenseService } from '../../api/expense.service';
 import { ModalcaComponent } from '../modalca/modalca.component';
 import { ModalrdvComponent } from '../modalrdv/modalrdv.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -42,7 +43,8 @@ export class DashboardComponent implements OnInit {
   public lineChartGradientsNumbersData:Array<any>;
   public lineChartGradientsNumbersOptions:any;
   public lineChartGradientsNumbersLabels:Array<any>;
-  public lineChartGradientsNumbersColors:Array<any>
+  public lineChartGradientsNumbersColors:Array<any>;
+  public beneficesData: any[] = [];
 
   public chartClicked(event: any): void {
     if (event.active && event.active.length > 0) {
@@ -98,13 +100,39 @@ export class DashboardComponent implements OnInit {
       return "rgb(" + r + ", " + g + ", " + b + ")";
     }
   }
-  constructor(private incomeService: IncomeService, private modalService: NgbModal, private appointmentService: AppointmentService) {
+  constructor(private incomeService: IncomeService, private modalService: NgbModal, private appointmentService: AppointmentService, private expenseService: ExpenseService) {
     this.lineBigDashboardChartData = [];
     this.lineBigDashboardChartLabels = [];
     this.lineChartGradientsNumbersData = [];
     this.lineChartGradientsNumbersLabels = [];
   }
 
+
+  public resumeBenefice(selectedYear: number): void {
+    this.beneficesData = [];
+    const months = Array.from({ length: 12 }, (_, i) => i + 1);
+  
+    this.incomeService.getIncomesByMonth(selectedYear).subscribe(incomeData => {
+      this.expenseService.getExpensesByMonth(selectedYear).subscribe(expenseData => {
+        months.forEach(month => {
+          const incomeAmount = incomeData.find(item => item.month === month)?.totalAmount || 0;
+          const expenseAmount = expenseData.find(item => item.month === month)?.totalAmount || 0;
+          const benefice = incomeAmount - expenseAmount;
+          this.beneficesData.push({
+            month: month,
+            income: incomeAmount,
+            expense: expenseAmount,
+            benefice: benefice
+          });
+        });
+      });
+    });
+  }
+  
+
+updateTable(): void {
+  this.resumeBenefice(this.selectedYear);
+}
 
 availableYears: number[] = [];
 selectedYear: number = new Date().getFullYear();
@@ -125,7 +153,9 @@ updateChartData(): void {
 onYearChange(event: any): void {
   this.selectedYear = event.target.value; 
   this.updateChartData(); 
+  this.updateTable();
 }
+
 
 
 getIncomesByMonth(year: number): void {
@@ -197,6 +227,7 @@ getAppointmentsByMonth(year:number): void {
     const currentYear = new Date().getFullYear();
     this.initAvailableYears(); // Initialiser les années disponibles
     this.updateChartData(); // Mettre à jour les données du graphique avec l'année sélectionnée par défaut
+    this.updateTable();
 
 
     this.lineBigDashboardChartOptions = {

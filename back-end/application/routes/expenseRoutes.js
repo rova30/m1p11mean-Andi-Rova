@@ -57,4 +57,41 @@ router.get('/allEmployees', async (req, res) => {
   }
 });
 
+
+router.get('/expensesByMonth/:year', async (req, res) => {
+  try {
+    const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
+    const db = client.db('finalexam');
+    const year = parseInt(req.params.year);
+
+    const expensesByMonth = await db.collection('Expenses').aggregate([
+      {
+        $match: {
+          $expr: { $eq: [{ $year: "$dateTime" }, year] }
+        }
+      },
+      {
+        $group: {
+          _id: {
+            month: { $month: "$dateTime" }
+          },
+          totalAmount: { $sum: "$amount" }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          month: "$_id.month",
+          totalAmount: 1
+        }
+      }
+    ]).toArray();
+    res.json(expensesByMonth);
+    client.close();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error fetching expenses by year' });
+  }
+});
+
 module.exports = router;
