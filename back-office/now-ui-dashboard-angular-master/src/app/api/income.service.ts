@@ -25,6 +25,27 @@ export class IncomeService {
     );
   }
 
+  getIncomesCategory(page: number, pageSize: number): Observable<any[]> {
+    const url = `${baseUrl('/incomes/allIncomesCategory')}?page=${page}&pageSize=${pageSize}`;
+    return this.http.get<any[]>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  totalIncomesCategoryCount(): Observable<number> {
+    return this.http.get<number>(`${baseUrl('/incomes/totalIncomesCategoryCount')}`).pipe(
+      catchError(this.handleError)
+    );
+  }
+  
+  
+  addIncomeCategory(employeeData: any): Observable<any> {
+    return this.http.post(baseUrl('/incomes/addIncomeCategory'), employeeData)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   private handleError(error: any) {
     console.error('An error occurred:', error);
     return throwError(error);

@@ -17,6 +17,28 @@ export class ExpenseService {
       );
   }
 
+
+  getExpensesCategory(page: number, pageSize: number): Observable<any[]> {
+    const url = `${baseUrl('/expenses/allExpensesCategory')}?page=${page}&pageSize=${pageSize}`;
+    return this.http.get<any[]>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  totalExpensesCategoryCount(): Observable<number> {
+    return this.http.get<number>(`${baseUrl('/expenses/totalExpensesCategoryCount')}`).pipe(
+      catchError(this.handleError)
+    );
+  }
+  
+  
+  addExpenseCategory(employeeData: any): Observable<any> {
+    return this.http.post(baseUrl('/expenses/addExpenseCategory'), employeeData)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   private handleError(error: any) {
     console.error('An error occurred:', error);
     return throwError(error);

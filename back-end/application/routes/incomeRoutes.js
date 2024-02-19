@@ -137,4 +137,72 @@ console.log(incomesByYearAndMonth);
 });
 
 
+
+
+// Type
+router.post('/addIncomeCategory', async (req, res) => {
+  try {
+    const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
+    const db = client.db('finalexam');
+    if (!req.body) {
+      return res.status(400).json({ error: 'Request body is missing or invalid' });
+    }
+    const { type } = req.body;
+    const newIncomeCategory = {
+      type
+    };
+    const result = await db.collection('IncomeCategory').insertOne(newIncomeCategory);
+    res.json({ message: 'IncomeCategory added successfully' });
+    client.close();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error adding IncomesCategory' });
+  }
+});
+
+router.get('/allIncomesCategory', async (req, res) => {
+  try {
+    const page = parseInt(req.query.page); 
+    const pageSize = parseInt(req.query.pageSize); 
+    const skip = (page - 1) * pageSize;
+
+    const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
+    const db = client.db('finalexam');
+
+    const incomesCategory = await db.collection('IncomeCategory')
+                               .aggregate([
+                                  { $skip: skip },
+                                  { $limit: pageSize },
+                                  {
+                                    $project: {
+                                      type: 1
+                                    }
+                                  }
+                               ])
+                               .toArray();
+
+    res.json(incomesCategory);
+    client.close();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error fetching IncomesCategory' });
+  }
+});
+
+router.get('/totalIncomesCategoryCount', async (req, res) => {
+  try {
+    const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
+    const db = client.db('finalexam');
+
+    const count = await db.collection('IncomeCategory').countDocuments();
+
+    res.json(count);
+    client.close();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error fetching total employees count' });
+  }
+});
+
+
 module.exports = router;

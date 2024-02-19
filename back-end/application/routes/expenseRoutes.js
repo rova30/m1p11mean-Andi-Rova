@@ -94,4 +94,70 @@ router.get('/expensesByMonth/:year', async (req, res) => {
   }
 });
 
+
+// Type
+router.post('/addExpenseCategory', async (req, res) => {
+  try {
+    const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
+    const db = client.db('finalexam');
+    if (!req.body) {
+      return res.status(400).json({ error: 'Request body is missing or invalid' });
+    }
+    const { category } = req.body;
+    const newExpenseCategory = {
+      category
+    };
+    const result = await db.collection('ExpensesCategory').insertOne(newExpenseCategory);
+    res.json({ message: 'ExpensesCategory added successfully' });
+    client.close();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error adding expensesCategory' });
+  }
+});
+
+router.get('/allExpensesCategory', async (req, res) => {
+  try {
+    const page = parseInt(req.query.page); 
+    const pageSize = parseInt(req.query.pageSize); 
+    const skip = (page - 1) * pageSize;
+
+    const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
+    const db = client.db('finalexam');
+
+    const expensesCategory = await db.collection('ExpensesCategory')
+                               .aggregate([
+                                  { $skip: skip },
+                                  { $limit: pageSize },
+                                  {
+                                    $project: {
+                                      category: 1
+                                    }
+                                  }
+                               ])
+                               .toArray();
+
+    res.json(expensesCategory);
+    client.close();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error fetching expensesCategory' });
+  }
+});
+
+router.get('/totalExpensesCategoryCount', async (req, res) => {
+  try {
+    const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
+    const db = client.db('finalexam');
+
+    const count = await db.collection('ExpensesCategory').countDocuments();
+
+    res.json(count);
+    client.close();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error fetching total employees count' });
+  }
+});
+
 module.exports = router;
