@@ -1,0 +1,80 @@
+<div class="wrapper">
+    <div class="page-header page-header-small">
+        <div class="page-header-image rellax-header" data-rellax-speed="-8" style="background-image: url('assets/img/header-3.png');">
+        </div>
+        <div class="container">
+            <div class="content-center">
+                <img class="logo" src="assets/img/logo-r&a-blanc-complet.png" alt="R&A Beauty">
+                <div class="text-center">
+                    <a class="btn btn-primary btn-round" type="button" href="service#services">Prendre rendez-vous</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main" style="height: auto;">
+        <section class="section section-images" id="services" >
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h3>Réserver en ligne pour un rendez-vous</h3>
+                    </div>
+                    <div class="col-lg-8">
+                        <div *ngIf="loading" class="text-center mt-3">
+                            <div class="spinner-border" role="status">
+                            <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
+                        <div class="services" *ngIf="!loading">
+                            <div class="card-service" *ngFor="let service of services">
+                                <div class="left-content">
+                                    <p>{{ service.name }}</p>
+                                </div>
+                                <div class="right-content">
+                                    <p>{{ service.deadline }}min - {{ service.cost }} Ar</p>
+                                    <button class="custom-btn" (click)="addService(service)">Choisir</button>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <nav aria-label="Page navigation" *ngIf="!loading">
+                            <ul class="pagination justify-content-center">
+                            <li class="page-item">
+                                <button class="page-link" (click)="prevPage()">Précédent</button>
+                            </li>
+                            <li class="page-item disabled">
+                                <span class="page-link">{{ currentPage }} / {{ totalPages }}</span>
+                            </li>
+                            <li class="page-item">
+                                <button class="page-link" (click)="nextPage()">Suivant</button>
+                            </li>
+                            </ul>
+                        </nav>  
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="container-selected-services" *ngIf="selectedServices.length != 0">
+                        <div class="container-selected-services-header">
+                            <h3>Mes choix ({{selectedServices.length}})</h3>
+                        </div>
+                        <div class="selected-services">
+                            <div class="card-selected-service" *ngFor="let service of selectedServices; let i = index">
+                            <div class="left-content-selected">
+                                <p>{{ service.name }} <br>
+                                {{ service.deadline }}min - {{ service.cost }} Ar
+                                </p>
+                            </div>
+                            <div class="right-content-selected">
+                                <a type="button" class="link" (click)="removeService(i)" style="margin-top: 10px;">Supprimer</a>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        
+                    </div>
+                </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+</div>

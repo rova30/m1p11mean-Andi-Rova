@@ -1,0 +1,17 @@
+.ngb-progressbar {
+    margin-top: 5rem;
+}
+
+.rellax-header::before {
+    content: ""; /* Ajoute un pseudo-élément avant le contenu réel */
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-image: inherit; /* Copie l'image de fond du parent */
+    background-size: inherit; /* Copie la taille de l'image de fond du parent */
+    background-position: inherit; /* Copie la position de l'image de fond du parent */
+    /*filter: grayscale(50%); /* Ajoute le filtre de grisaille (ajustez selon vos besoins) */
+    z-index: -1; /* Place le pseudo-élément en arrière-plan */
+}

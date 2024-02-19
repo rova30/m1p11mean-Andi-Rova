@@ -5,7 +5,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from './app.routing';
 import { ComponentsModule } from './components/components.module';
-import { ExamplesModule } from './examples/examples.module';
+import { ExamplesModule } from './views/examples.module';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './shared/navbar/navbar.component';
 import { AuthService } from './api/auth.service';
@@ -14,13 +14,14 @@ import { AuthModule } from './auth/auth.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { environment } from 'environments/environment';
 import {initializeApp} from 'firebase/app';
+import { ServiceService } from './api/service.service';
 
 initializeApp(environment.firebase);
 
 @NgModule({
     declarations: [
         AppComponent,
-        NavbarComponent
+        NavbarComponent,
     ],
     imports: [
         BrowserModule,
@@ -35,7 +36,8 @@ initializeApp(environment.firebase);
         AuthModule,
     ],
     providers: [
-        AuthService
+        AuthService,
+        ServiceService
     ],
     bootstrap: [AppComponent]
 })

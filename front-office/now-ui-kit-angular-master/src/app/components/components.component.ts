@@ -2,15 +2,13 @@ import { Component, OnInit, Renderer2, OnDestroy } from '@angular/core';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { NgbAccordionConfig } from '@ng-bootstrap/ng-bootstrap';
 import * as Rellax from 'rellax';
-
+import { fadeInOutAnimation } from '../utils/Animation';
 @Component({
     selector: 'app-components',
     templateUrl: './components.component.html',
-    styles: [`
-    ngb-progressbar {
-        margin-top: 5rem;
-    }
-    `]
+    styleUrls: ['./components.component.css'],
+    animations: [fadeInOutAnimation]
+
 })
 
 export class ComponentsComponent implements OnInit, OnDestroy {
