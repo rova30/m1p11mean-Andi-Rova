@@ -9,6 +9,7 @@ import { AgmCoreModule } from '@agm/core';
 import { LandingComponent } from './landing/landing.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ExamplesComponent } from './examples.component';
+import { ServiceComponent } from './service/service.component';
 
 @NgModule({
     imports: [
@@ -24,7 +25,8 @@ import { ExamplesComponent } from './examples.component';
     declarations: [
         LandingComponent,
         ExamplesComponent,
-        ProfileComponent
+        ProfileComponent,
+        ServiceComponent
     ]
 })
 export class ExamplesModule { }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, Renderer2, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, Inject, Renderer2, ElementRef, ViewChild,HostBinding  } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { DOCUMENT } from '@angular/common';
 import { Location } from '@angular/common';
@@ -6,14 +6,19 @@ import { NavbarComponent } from './shared/navbar/navbar.component';
 import { filter, Subscription } from 'rxjs';
 import {getMessaging, getToken} from 'firebase/messaging';
 import { environment } from 'environments/environment';
+import { fadeInOutAnimation } from './utils/Animation';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss']
+    styleUrls: ['./app.component.scss'],
+    animations: [fadeInOutAnimation]
+
 })
 export class AppComponent implements OnInit {
     private _router: Subscription;
+    data : Date = new Date();
+
     @ViewChild(NavbarComponent) navbar: NavbarComponent;
 
     constructor( private renderer : Renderer2, private router: Router, @Inject(DOCUMENT,) private document: any, private element : ElementRef, public location: Location) {}
@@ -25,6 +30,8 @@ export class AppComponent implements OnInit {
     if (this.location.path() === '/login' || this.location.path() === '/signin') {
         navbar.classList.remove('navbar-transparent');
         navbar.style.display = 'none'; // Masquer le navbar si la route est "/login"
+    }else if(this.location.path() === '/appointment'){
+        navbar.classList.remove('navbar-transparent');
     }
 
     this._router = this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
@@ -81,3 +88,4 @@ export class AppComponent implements OnInit {
 
 
 }
+
