@@ -123,7 +123,6 @@ router.get('/incomesByYearAndMonth/:year/:month', async (req, res) => {
 });
 
 
-// Pour obtenir les détails des revenus par année et mois
 router.get('/incomesDetailsByYearAndMonth/:year/:month', async (req, res) => {
   try {
     const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
