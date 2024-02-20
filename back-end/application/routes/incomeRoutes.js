@@ -123,6 +123,44 @@ router.get('/incomesByYearAndMonth/:year/:month', async (req, res) => {
 });
 
 
+// Pour obtenir les détails des revenus par année et mois
+router.get('/incomesDetailsByYearAndMonth/:year/:month', async (req, res) => {
+  try {
+    const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
+    const db = client.db('finalexam');
+    const year = parseInt(req.params.year);
+    const month = parseInt(req.params.month);
+
+    const incomesDetails = await db.collection('Incomes').aggregate([
+      {
+        $match: {
+          $expr: { 
+            $and: [
+              { $eq: [{ $year: { $toDate: "$dateTime" } }, year] }, 
+              { $eq: [{ $month: { $toDate: "$dateTime" } }, month] }
+            ] 
+          }
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          category: 1,
+          amount: 1,
+          dateTime: 1
+        }
+      }
+    ]).toArray();
+    console.log(incomesDetails);
+    res.json(incomesDetails);
+    client.close();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error fetching incomes details by month and year' });
+  }
+});
+
+
 // Type
 router.post('/addIncomeCategory', async (req, res) => {
   try {

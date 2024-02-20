@@ -44,6 +44,9 @@ export class DashboardComponent implements OnInit {
   public lineChartGradientsNumbersOptions:any;
   public lineChartGradientsNumbersLabels:Array<any>;
   public lineChartGradientsNumbersColors:Array<any>;
+  expensesDetails: any[] = [];
+  incomesDetails: any[] = [];
+  selectedMonth = 0;
   public beneficesData: any[] = [];
   public category: any[] = [];
   public expenseData: any = {
@@ -52,7 +55,26 @@ export class DashboardComponent implements OnInit {
     amount : ''
   };
 
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    return `${year}/${month}/${day}`;
+  }
+
+    getDetailsForMonth(month: number) {
+      this.selectedMonth = month;
+
+      this.expenseService.getExpensesDetailsByYearAndMonth(this.selectedYear, month).subscribe(data => {
+        this.expensesDetails = data;
+      });
   
+
+      this.incomeService.getIncomesDetailsByYearAndMonth(this.selectedYear,month).subscribe(data => {
+        this.incomesDetails = data;
+      });
+    }
   
   resetForm() {
     this.expenseData = {

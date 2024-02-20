@@ -17,10 +17,14 @@ export class IncomeService {
       );
   }
 
-  // Changement de l'ordre des paramètres
   getIncomesByYearAndMonth(year: number, month: number): Observable<any[]> {
-    // Concaténez l'année et le mois pour former l'URL de l'API
     return this.http.get<any[]>(`${baseUrl('/incomes/incomesByYearAndMonth/' + year + '/' + month)}`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getIncomesDetailsByYearAndMonth(year: number, month: number): Observable<any[]> {
+    return this.http.get<any[]>(`${baseUrl('/incomes/incomesDetailsByYearAndMonth/' + year + '/' + month)}`).pipe(
       catchError(this.handleError)
     );
   }

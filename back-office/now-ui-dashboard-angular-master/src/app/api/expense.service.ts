@@ -24,6 +24,12 @@ export class ExpenseService {
       );
   }
 
+  getExpensesDetailsByYearAndMonth(year: number, month: number): Observable<any[]> {
+    return this.http.get<any[]>(`${baseUrl('/expenses/expensesDetailsByYearAndMonth/' + year + '/' + month)}`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
 
   getExpensesCategory(page: number, pageSize: number): Observable<any[]> {
     const url = `${baseUrl('/expenses/allExpensesCategory')}?page=${page}&pageSize=${pageSize}`;

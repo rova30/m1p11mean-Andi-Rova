@@ -71,6 +71,45 @@ router.get('/expensesByMonth/:year', async (req, res) => {
 });
 
 
+// Pour obtenir les détails des dépenses par année et mois
+router.get('/expensesDetailsByYearAndMonth/:year/:month', async (req, res) => {
+  try {
+    const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
+    const db = client.db('finalexam');
+    const year = parseInt(req.params.year);
+    const month = parseInt(req.params.month);
+
+    const expensesDetails = await db.collection('Expenses').aggregate([
+      {
+        $match: {
+          $expr: { 
+            $and: [
+              { $eq: [{ $year: { $toDate: "$dateTime" } }, year] }, 
+              { $eq: [{ $month: { $toDate: "$dateTime" } }, month] }
+            ] 
+          }
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          category: 1,
+          amount: 1,
+          dateTime: 1
+        }
+      }
+    ]).toArray();
+    console.log(expensesDetails);
+    res.json(expensesDetails);
+    client.close();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error fetching expenses details by month and year' });
+  }
+});
+
+
+
 // Type
 router.post('/addExpenseCategory', async (req, res) => {
   try {

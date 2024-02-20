@@ -256,7 +256,7 @@
               </thead>
               <tbody>
                 <tr *ngFor="let benefice of beneficesData">
-                  <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#detailresume">
+                  <td><button type="button" class="btn btn-primary" (click)="getDetailsForMonth(benefice.month)" data-toggle="modal" data-target="#detailresume">
                     {{ benefice.month }}
                   </button></td>
                   <td>{{ benefice.income }}</td>
@@ -281,12 +281,28 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-          <div class="modal-body">
-   
-          </div>
+
+<div class="modal-body">
+  <h5>Détail pour le mois {{ selectedMonth }}</h5>
+  <h6>Dépenses :</h6>
+  <ul>
+    <li *ngFor="let expense of expensesDetails">
+      {{ formatDate(expense.dateTime) }} - {{ expense.category.category }} - {{ expense.amount }} 
+    </li>
+  </ul>
+  <h6>Revenus :</h6>
+  <ul>
+    <li *ngFor="let income of incomesDetails">
+      {{ formatDate(income.dateTime) }} - {{ income.category.type }} - {{ income.amount }}
+    </li>
+  </ul>
+</div>
+<div class="modal-footer">
+
+</div>
+
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-            <button type="submit" class="btn btn-primary">Enregistrer</button>
+
           </div>
       </div>
     </div>
