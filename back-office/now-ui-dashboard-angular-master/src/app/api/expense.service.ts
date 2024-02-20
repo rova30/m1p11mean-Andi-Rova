@@ -11,6 +11,13 @@ export class ExpenseService {
 
   constructor(private http: HttpClient) { }
 
+  addExpense(serviceData: any): Observable<any> {
+    return this.http.post(baseUrl('/expenses/addExpense'), serviceData)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   getExpensesByMonth(year: number): Observable<any[]> {
     return this.http.get<any[]>(`${baseUrl('/expenses/expensesByMonth/' + year)}`).pipe(
         catchError(this.handleError)

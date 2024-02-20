@@ -45,6 +45,46 @@ export class DashboardComponent implements OnInit {
   public lineChartGradientsNumbersLabels:Array<any>;
   public lineChartGradientsNumbersColors:Array<any>;
   public beneficesData: any[] = [];
+  public category: any[] = [];
+  public expenseData: any = {
+    category: '', 
+    dateTime : '',
+    amount : ''
+  };
+
+  
+  
+  resetForm() {
+    this.expenseData = {
+      category: '',
+      dateTime : '',
+      amount : ''
+    };
+  }
+  
+  addExpense() {
+    this.expenseService.addExpense(this.expenseData).subscribe(
+      (response) => {
+        console.log('expense added successfully:', response);
+        this.resetForm();
+        this.updateTable();
+      },
+      (error) => {
+        console.error('Error adding expense:', error);
+      }
+    );
+  }
+  
+  public loadExpensesCategory() {
+    this.expenseService.getExpensesCategory(1, 100).subscribe(
+      (data: any[]) => {
+        this.category = data;
+      },
+      (error: any) => {
+        console.error('Error fetching expensesCat:', error);
+      }
+    );
+  }
 
   public chartClicked(event: any): void {
     if (event.active && event.active.length > 0) {
@@ -228,6 +268,7 @@ getAppointmentsByMonth(year:number): void {
     this.initAvailableYears(); // Initialiser les années disponibles
     this.updateChartData(); // Mettre à jour les données du graphique avec l'année sélectionnée par défaut
     this.updateTable();
+    this.loadExpensesCategory();
 
 
     this.lineBigDashboardChartOptions = {

@@ -7,26 +7,6 @@ const connectionString = 'mongodb+srv://webavanceem1:final@clusterm1.kqgspnb.mon
 
 router.use(bodyParser.json());
 
-router.post('/addIncomeCat', async (req, res) => {
-  try {
-    const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
-    const db = client.db('finalexam');
-    if (!req.body) {
-      return res.status(400).json({ error: 'Request body is missing or invalid' });
-    }
-    const { category } = req.body;
-    const newIncomeCat = {
-      category
-    };
-    const result = await db.collection('IncomeCategory').insertOne(newIncomeCat);
-    res.json({ message: 'Customer added successfully' });
-    client.close();
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error adding customer' });
-  }
-});
-
 router.post('/addIncome', async (req, res) => {
   try {
     const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
@@ -62,6 +42,8 @@ router.get('/categoriesIncomelist', async (req, res) => {
   }
 });
 
+
+// Pour les revenus par mois
 router.get('/incomesByMonth/:year', async (req, res) => {
   try {
     const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
@@ -71,13 +53,13 @@ router.get('/incomesByMonth/:year', async (req, res) => {
     const incomesByMonth = await db.collection('Incomes').aggregate([
       {
         $match: {
-          $expr: { $eq: [{ $year: "$dateTime" }, year] }
+          $expr: { $eq: [{ $year: { $toDate: "$dateTime" } }, year] }
         }
       },
       {
         $group: {
           _id: {
-            month: { $month: "$dateTime" }
+            month: { $month: { $toDate: "$dateTime" } }
           },
           totalAmount: { $sum: "$amount" }
         }
@@ -98,8 +80,7 @@ router.get('/incomesByMonth/:year', async (req, res) => {
   }
 });
 
-
-
+// Pour les revenus par année et par mois
 router.get('/incomesByYearAndMonth/:year/:month', async (req, res) => {
   try {
     const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
@@ -110,12 +91,17 @@ router.get('/incomesByYearAndMonth/:year/:month', async (req, res) => {
     const incomesByYearAndMonth = await db.collection('Incomes').aggregate([
       {
         $match: {
-          $expr: { $and: [{ $eq: [{ $year: "$dateTime" }, year] }, { $eq: [{ $month: "$dateTime" }, month] }] }
+          $expr: { 
+            $and: [
+              { $eq: [{ $year: { $toDate: "$dateTime" } }, year] }, 
+              { $eq: [{ $month: { $toDate: "$dateTime" } }, month] }
+            ] 
+          }
         }
       },
       {
         $group: {
-          _id: { $dayOfMonth: "$dateTime" },
+          _id: { $dayOfMonth: { $toDate: "$dateTime" } },
           totalAmount: { $sum: "$amount" }
         }
       },
@@ -127,7 +113,7 @@ router.get('/incomesByYearAndMonth/:year/:month', async (req, res) => {
         }
       }
     ]).toArray();
-console.log(incomesByYearAndMonth);
+    console.log(incomesByYearAndMonth);
     res.json(incomesByYearAndMonth);
     client.close();
   } catch (error) {
@@ -135,8 +121,6 @@ console.log(incomesByYearAndMonth);
     res.status(500).json({ error: 'Error fetching incomes by month and day' });
   }
 });
-
-
 
 
 // Type
