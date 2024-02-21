@@ -7,60 +7,62 @@ const connectionString = 'mongodb+srv://webavanceem1:final@clusterm1.kqgspnb.mon
 
 router.use(bodyParser.json());
 
-router.get('/appointmentsByEmployeeAndDateAndStatus/:employeeId/:dateTimeEnd/:status', async (req, res) => {
+router.get('/appointmentsByEmployeeAndDateAndStatus/:employeeId/:date/:statut', async (req, res) => {
     try {
-      const { employeeId, dateTimeEnd, status } = req.params;
-  
-      const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
-      const db = client.db('finalexam');
-  
-      const appointments = await db.collection('AssignmentAppointment').aggregate([
-        {
-          $match: {
-            'employee._id': employeeId,
-            'dateTimeEnd': new Date(dateTimeEnd),
-            'statut': parseInt(status)
-          }
-        },
-        {
-          $lookup: {
-            from: 'services',
-            localField: 'services._id',
-            foreignField: '_id',
-            as: 'serviceDetails'
-          }
-        },
-        {
-          $project: {
-            'appointment': 1,
-            'employee': 1,
-            'services': 1,
-            'dateTimeEnd': 1,
-            'statut': 1,
-            'totalCommission': {
-              $sum: {
-                $map: {
-                  input: '$services',
-                  as: 'service',
-                  in: {
-                    $multiply: [
-                      '$$service.commission',
-                      '$$serviceDetails.cost'
-                    ]
-                  }
+        const { employeeId, date, statut } = req.params;
+
+        // Convertir la date en objet Date pour rechercher sur toute la journée
+        const startDate = new Date(date);
+        const endDate = new Date(date);
+        endDate.setDate(endDate.getDate() + 1); // Ajouter un jour pour obtenir la fin de la journée
+
+        const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
+        const db = client.db('finalexam');
+
+        const appointments = await db.collection('AssignmentAppointment').aggregate([
+            {
+                $match: {
+                    'employee._id': employeeId,
+                    'dateTimeEnd': {
+                        $gte: startDate.toISOString(), // Début de la journée en format ISOString
+                        $lt: endDate.toISOString() // Fin de la journée en format ISOString
+                    }, // Rechercher sur toute la journée
+                    'statut': parseInt(statut)
                 }
-              }
+            },
+            {
+                $addFields: {
+                    servicesArray: [ "$services" ] // Convertir l'objet services en un tableau contenant un seul élément
+                }
+            },
+            {
+                $unwind: "$servicesArray" // Dérouler le tableau pour traiter chaque élément séparément
+            },
+            {
+                $project: {
+                    _id: 1,
+                    appointment: 1,
+                    employee: 1,
+                    dateTimeStart: 1,
+                    dateTimeEnd: 1,
+                    statut: 1,
+                    services: 1,
+                    totalCommission: {
+                        $multiply: [
+                            { $divide: ["$servicesArray.commission", 100] },
+                            "$servicesArray.cost"
+                        ]
+                    }
+                }
             }
-          }
-        }
-      ]).toArray();
-  
-      res.json(appointments);
-      client.close();
+        ]).toArray();
+        console.log(appointments);
+        res.json(appointments);
+        client.close();
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Error fetching appointments by employee, date, and status' });
+        console.error(error);
+        res.status(500).json({ error: 'Error fetching appointments by employee, date, and status' });
     }
-  });
-  
+});
+
 module.exports = router;
