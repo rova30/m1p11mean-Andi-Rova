@@ -7,6 +7,7 @@ import { ChartsModule } from 'ng2-charts';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrModule } from 'ngx-toastr';
 import { TaskComponent } from '../../employee/task/task.component';
+import { AppointmentComponent } from '../../employee/appointment/appointment.component';
 import { EmployeeService } from '../../api/employee.service';
 
 @NgModule({
@@ -20,6 +21,7 @@ import { EmployeeService } from '../../api/employee.service';
   ],
   declarations: [
     TaskComponent,
+    AppointmentComponent,
   ],providers: [
     EmployeeService
   ]

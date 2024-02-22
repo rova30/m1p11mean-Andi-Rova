@@ -11,51 +11,52 @@ router.get('/appointmentsByEmployeeAndDateAndStatus/:employeeId/:date/:statut', 
     try {
         const { employeeId, date, statut } = req.params;
 
-        // Convertir la date en objet Date pour rechercher sur toute la journée
+
         const startDate = new Date(date);
         const endDate = new Date(date);
-        endDate.setDate(endDate.getDate() + 1); // Ajouter un jour pour obtenir la fin de la journée
+        endDate.setDate(endDate.getDate() + 1); 
 
         const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
         const db = client.db('finalexam');
 
         const appointments = await db.collection('AssignmentAppointment').aggregate([
             {
+                $unwind: '$assignments' 
+            },
+            {
                 $match: {
-                    'employee._id': employeeId,
-                    'dateTimeEnd': {
-                        $gte: startDate.toISOString(), // Début de la journée en format ISOString
-                        $lt: endDate.toISOString() // Fin de la journée en format ISOString
-                    }, // Rechercher sur toute la journée
-                    'statut': parseInt(statut)
+                    'assignments.0._id': employeeId, 
+                    'assignments.3': { $gte: startDate.toISOString(), $lt: endDate.toISOString() },
+                    'assignments.4': parseInt(statut) 
                 }
-            },
-            {
-                $addFields: {
-                    servicesArray: [ "$services" ] // Convertir l'objet services en un tableau contenant un seul élément
-                }
-            },
-            {
-                $unwind: "$servicesArray" // Dérouler le tableau pour traiter chaque élément séparément
             },
             {
                 $project: {
                     _id: 1,
                     appointment: 1,
-                    employee: 1,
-                    dateTimeStart: 1,
-                    dateTimeEnd: 1,
-                    statut: 1,
-                    services: 1,
+                    employee: { $arrayElemAt: ['$assignments', 0] },
+                    services: { $arrayElemAt: ['$assignments', 1] },
+                    dateTimeStart: { $arrayElemAt: ['$assignments', 2] },
+                    dateTimeEnd: { $arrayElemAt: ['$assignments', 3] },
+                    statut: { $arrayElemAt: ['$assignments', 4] },
+                    commission: { $arrayElemAt: ['$assignments.commission', 0] },
+                    cost: { $arrayElemAt: ['$assignments.cost', 0] },
                     totalCommission: {
                         $multiply: [
-                            { $divide: ["$servicesArray.commission", 100] },
-                            "$servicesArray.cost"
+                            { $divide: [{ $toDouble: { $arrayElemAt: ['$assignments.commission', 0] } }, 100] }, 
+                            { $toDouble: { $arrayElemAt: ['$assignments.cost', 0] } } 
                         ]
                     }
                 }
             }
+            
+            
+            
+            
+            
         ]).toArray();
+        
+        console.log(req.params);
         console.log(appointments);
         res.json(appointments);
         client.close();

@@ -1,0 +1,136 @@
+<div class="panel-header panel-header-sm">
+</div>
+<div class="main-content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title"> Les rendez-vous où vous y êtes assignés</h4>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table">
+              <thead class=" text-primary">
+                <th>
+                  Client
+                </th>
+                <th>
+                  Contact
+                </th>
+                <th>
+                  Date prévu
+                </th>
+                <th>
+                  Offre spéciale
+                </th>
+                <th>
+                  Total à payer
+                </th>
+                <th>
+                  Reste à payer
+                </th>
+                <th class="text-right">
+                    --
+                </th>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    Kathy Belluci
+                  </td>
+                  <td>
+                    0324565878
+                  </td>
+                  <td>
+                    2024/02/23 - 08:30
+                  </td>
+                  <td>
+                    Aucun
+                  </td>
+                  <td>
+                    50000 Ar
+                  </td>
+                  <td>
+                    45000 Ar
+                  </td>
+                  <td class="text-right">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#detailAppointment">Détails</button>
+                  </td>
+                </tr>
+              </tbody>           
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="detailAppointment" tabindex="-1" role="dialog" aria-labelledby="detailAppointmentLabel"
+aria-hidden="true">
+<div class="modal-dialog custom-modal-lg" role="document">
+    <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="detailAppointmentLabel">Détail du rendez-vous</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <form enctype="multipart/form-data">
+      <div class="modal-body">
+        <h5>--</h5>
+        <div class="table-responsive">
+            <table class="table">
+              <thead class=" text-primary">
+                <th>
+                  Service
+                </th>
+                <th>
+                  Début prévu
+                </th>
+                <th>
+                  Intervenant
+                </th>
+                <th>
+                  Début réel
+                </th>
+                <th>
+                  Fin réel
+                </th>
+                <th class="text-right">
+                </th>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    Lissage
+                  </td>
+                  <td>
+                    07:00
+                  </td>
+                  <td>
+                    Vous
+                  </td>
+                  <td>
+                    <input type="datetime-local" name="" id="">&nbsp;<button type="button" class="btn btn-primary btn-sm">OK</button>
+                  </td>
+                  <td>
+                    <input type="datetime-local" name="" id="">&nbsp;<button type="button" class="btn btn-primary btn-sm">OK</button>
+                  </td>
+                  <td class="text-right">
+                    <button type="button" class="btn btn-success">Terminer</button>&nbsp;
+                    <button type="button" class="btn btn-secondary">Annuler</button>
+                  </td>
+                </tr>
+              </tbody>           
+            </table>
+          </div>
+
+      </div>
+      <div class="modal-footer">
+
+      </div>
+    </form>
+  </div>
+</div>
+</div>

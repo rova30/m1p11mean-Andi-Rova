@@ -37,7 +37,7 @@ export class TaskComponent implements OnInit {
         this.loading = false;
         if (this.employee) {
           const today = new Date().toISOString().split('T')[0]; // Obtenez la date au format YYYY-MM-DD
-          const statut = 0; // Changez le statut selon vos besoins
+          const statut = 2; // Changez le statut selon vos besoins
           this.getAppointmentsByEmployeeId(this.employee._id, today, statut);
         } else {
           console.error('Employee is not defined yet.');
