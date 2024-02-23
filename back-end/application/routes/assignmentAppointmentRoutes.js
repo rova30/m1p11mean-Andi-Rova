@@ -49,15 +49,10 @@ router.get('/appointmentsByEmployeeAndDateAndStatus/:employeeId/:date/:statut', 
                     }
                 }
             }
-            
-            
-            
-            
-            
+                     
         ]).toArray();
         
-        console.log(req.params);
-        console.log(appointments);
+
         res.json(appointments);
         client.close();
     } catch (error) {
@@ -65,5 +60,37 @@ router.get('/appointmentsByEmployeeAndDateAndStatus/:employeeId/:date/:statut', 
         res.status(500).json({ error: 'Error fetching appointments by employee, date, and status' });
     }
 });
+
+
+
+router.get('/appointmentsAssignedByEmployee/:employeeId/:statut', async (req, res) => {
+    try {
+        const { employeeId, statut } = req.params;
+
+        const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
+        const db = client.db('finalexam');
+
+        const appointments = await db.collection('AssignmentAppointment').find({
+            'assignments.0._id': employeeId 
+        }).toArray();
+
+        const filteredAppointments = await Promise.all(appointments.map(async appointment => {
+            const payment = await db.collection('Payment').find({ 'appointment._id': appointment.appointment._id }).sort({ 'dateTime': -1 }).limit(1).toArray();
+            const leftToPay = payment.length > 0 ? payment[0].leftToPay : 0; // Si aucun paiement n'existe, la valeur par défaut sera 0
+            console.log(appointment.appointment._id);
+            console.log(payment);
+            return { ...appointment, leftToPay };
+        }));
+
+        console.log(req.params);
+
+        res.json(filteredAppointments);
+        client.close();
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Erreur lors de la récupération des rendez-vous par employé, date et statut' });
+    }
+});
+
 
 module.exports = router;

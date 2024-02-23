@@ -18,6 +18,12 @@ export class AssignmentAppointmentService {
     );
   }
 
+  getassignedByEmployee(employeeId: string, statut: number): Observable<any[]> {
+    return this.http.get<any[]>(`${baseUrl('/assignmentAppointment/appointmentsAssignedByEmployee/' + employeeId + '/' + statut)}`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: any) {
     console.error('An error occurred:', error);
     return throwError(error);

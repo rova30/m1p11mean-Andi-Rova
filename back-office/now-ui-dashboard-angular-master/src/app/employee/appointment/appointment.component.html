@@ -34,25 +34,25 @@
                 </th>
               </thead>
               <tbody>
-                <tr>
+                <tr *ngFor="let data of dataAssignment">
                   <td>
-                    Kathy Belluci
+                    {{data.appointment.customer.firstName}} {{data.appointment.customer.lastName}}</td>
+                  <td>
+                    {{data.appointment.customer.contact}}
                   </td>
                   <td>
-                    0324565878
+                    {{ data.appointment.dateTime | date: 'yyyy/MM/dd HH:mm' }}
                   </td>
                   <td>
-                    2024/02/23 - 08:30
+                    {{ data.appointment.specialOffer ? data.appointment.specialOffer : 'Aucun' }}
                   </td>
                   <td>
-                    Aucun
+                    {{ calculateTotalCost(data.appointment) }} Ar
                   </td>
                   <td>
-                    50000 Ar
-                  </td>
-                  <td>
-                    45000 Ar
-                  </td>
+                    {{ data.leftToPay }} Ar
+                    </td>
+                
                   <td class="text-right">
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#detailAppointment">Détails</button>
                   </td>
@@ -122,6 +122,25 @@ aria-hidden="true">
                     <button type="button" class="btn btn-secondary">Annuler</button>
                   </td>
                 </tr>
+                <tr>
+                    <td>
+                      Extension cils
+                    </td>
+                    <td>
+                      07:30
+                    </td>
+                    <td>
+                      Jean Michel
+                    </td>
+                    <td>
+                      07:35
+                    </td>
+                    <td>
+                  08:00 </td>
+                    <td class="text-right">
+                      Pas encore commencé
+                    </td>
+                  </tr>
               </tbody>           
             </table>
           </div>
