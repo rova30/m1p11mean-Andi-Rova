@@ -74,21 +74,101 @@ router.get('/appointmentsAssignedByEmployee/:employeeId/:statut', async (req, re
             'assignments.0._id': employeeId 
         }).toArray();
 
-        const filteredAppointments = await Promise.all(appointments.map(async appointment => {
+        const filteredAppointmentss = appointments.filter(appointment => {
+            const firstAssignment = appointment.assignments[0];
+            return firstAssignment && firstAssignment[4] ===  parseInt(statut) ;
+        });
+        
+        const filteredAppointments = await Promise.all(filteredAppointmentss.map(async appointment => {
             const payment = await db.collection('Payment').find({ 'appointment._id': appointment.appointment._id }).sort({ 'dateTime': -1 }).limit(1).toArray();
-            const leftToPay = payment.length > 0 ? payment[0].leftToPay : 0; // Si aucun paiement n'existe, la valeur par défaut sera 0
-            console.log(appointment.appointment._id);
-            console.log(payment);
+            const leftToPay = payment.length > 0 ? payment[0].leftToPay : 0; 
+            // console.log(appointment.appointment._id);
+            // console.log(payment);
             return { ...appointment, leftToPay };
         }));
+        
+        const appointmentsWithPayment = filteredAppointments.map(appointment => {
+            const mergedAppointment = {
+                ...appointment,
+                payment: appointment.leftToPay ? { leftToPay: appointment.leftToPay } : null
+            };
+            delete mergedAppointment.leftToPay; 
+            return mergedAppointment;
+        });
+        
+        console.log(appointmentsWithPayment);
+        
 
-        console.log(req.params);
-
-        res.json(filteredAppointments);
+        res.json(appointmentsWithPayment);
         client.close();
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Erreur lors de la récupération des rendez-vous par employé, date et statut' });
+    }
+});
+
+
+router.put('/updateAssignmentDateTimeEnd/:appointmentId/:assignmentId', async (req, res) => {
+    try {
+        const { appointmentId, assignmentId } = req.params;
+        const { newDateTime } = req.body;
+
+        console.log(req.params);
+        console.log(req.body);
+        const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
+        const db = client.db('finalexam');
+
+        const appointment = await db.collection('AssignmentAppointment').findOne({ 'appointment._id': appointmentId });
+        if (!appointment) {
+            return res.status(404).json({ message: 'Rendez-vous non trouvé' });
+        }
+
+        const assignmentToUpdate = appointment.assignments.find(assignment => assignment[0]._id.toString() === assignmentId);
+        if (!assignmentToUpdate) {
+            return res.status(404).json({ message: 'Assignation non trouvée' });
+        }
+
+        assignmentToUpdate[6] = newDateTime;
+        await db.collection('AssignmentAppointment').updateOne({ 'appointment._id': appointmentId }, { $set: { assignments: appointment.assignments } });
+
+        client.close();
+
+        return res.status(200).json({ message: 'Date de l\'assignation mise à jour avec succès' });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Erreur lors de la mise à jour de la date de l\'assignation' });
+    }
+});
+
+router.put('/updateAssignmentStatus/:appointmentId/:assignmentId', async (req, res) => {
+    try {
+        const { appointmentId, assignmentId } = req.params;
+        const { status } = req.body; 
+
+        const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
+        const db = client.db('finalexam');
+
+        const appointment = await db.collection('AssignmentAppointment').findOne({ 'appointment._id': appointmentId });
+        if (!appointment) {
+            client.close();
+            return res.status(404).json({ message: 'Rendez-vous non trouvé' });
+        }
+
+        const assignmentToUpdate = appointment.assignments.find(assignment => assignment[0]._id.toString() === assignmentId);
+        if (!assignmentToUpdate) {
+            client.close();
+            return res.status(404).json({ message: 'Assignation non trouvée' });
+        }
+        assignmentToUpdate[4] = status;
+        await db.collection('AssignmentAppointment').updateOne(
+            { 'appointment._id': appointmentId },
+            { $set: { assignments: appointment.assignments } }
+        );
+        client.close();
+        return res.status(200).json({ message: 'Statut de l\'assignation mis à jour avec succès' });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Erreur lors de la mise à jour du statut de l\'assignation' });
     }
 });
 

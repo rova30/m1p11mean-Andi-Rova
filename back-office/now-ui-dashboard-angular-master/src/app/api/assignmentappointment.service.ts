@@ -24,6 +24,18 @@ export class AssignmentAppointmentService {
     );
   }
 
+  updateAssignmentDateTimeEnd(appointmentId: string, assignmentId: string, newDateTime: Date): Observable<any> {
+    return this.http.put<any>(`${baseUrl('/assignmentAppointment/updateAssignmentDateTimeEnd/' + appointmentId + '/' + assignmentId )}`, { newDateTime }).pipe(
+      catchError(this.handleError)
+    );
+}
+
+  updateAssignmentStatus(appointmentId: string, assignmentId: string, status: number): Observable<any> {
+    return this.http.put<any>(`${baseUrl('/assignmentAppointment/updateAssignmentStatus/' + appointmentId + '/' + assignmentId )}`, { status }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: any) {
     console.error('An error occurred:', error);
     return throwError(error);
