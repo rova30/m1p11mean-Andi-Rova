@@ -255,7 +255,6 @@ router.get('/checkSpecialityExistence/:employeeId/:specialityId', async (req, re
 });
 
 
-
 router.get('/infoByEmployee/:employeeId', async (req, res) => {
   try {
     const { employeeId } = req.params;
@@ -278,6 +277,35 @@ router.get('/infoByEmployee/:employeeId', async (req, res) => {
     res.status(500).json({ error: 'Erreur lors de la récupération des employés' });
   }
 });
+
+
+router.delete('/deleteSpeciality/:employeeId/:specialityId', async (req, res) => {
+  try {
+    const { employeeId, specialityId } = req.params;
+    const employeeObjectId = new ObjectId(employeeId);
+
+    const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
+    const db = client.db('finalexam');
+
+    const result = await db.collection('Employee').updateOne(
+      { _id: employeeObjectId },
+      { $pull: { speciality: { _id: specialityId } } }
+    );
+
+    if (result.modifiedCount === 0) {
+      return res.status(404).json({ error: 'Speciality not found for the employee' });
+    }
+
+    res.json({ success: true });
+    client.close();
+  } catch (error) {
+    console.error('Error deleting speciality:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+
 
 
 

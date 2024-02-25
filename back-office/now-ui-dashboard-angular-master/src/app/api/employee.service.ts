@@ -66,6 +66,14 @@ export class EmployeeService {
     );
   }
 
+  deleteSpeciality(employeeId: string, specialityId: string): Observable<any> {
+    return this.http.delete<any>(`${baseUrl('/employees/deleteSpeciality/' + employeeId + '/' + specialityId )}`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  
+
   private handleError(error: any) {
     console.error('An error occurred:', error);
     return throwError(error);

@@ -11,26 +11,25 @@
           </button>
         </div>
         <div class="card-body">
-          <div class="table-responsive">
-<table class="table" *ngFor="let datas of dataEmployee">
-  <thead>
-    <tr>
-      <th>Specialty</th>
-      <th class="text-right">Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let specialty of datas.speciality">
-      <td>{{ specialty.name }}</td>
-      <td class="text-right">
-        <button type="button" class="btn btn-danger">Supprimer</button>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
+            <div class="table-responsive">
+              <table class="table" *ngFor="let datas of dataEmployee">
+                <thead>
+                  <tr>
+                    <th>Specialty</th>
+                    <th class="text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let specialty of datas.speciality">
+                    <td>{{ specialty.name }}</td>
+                    <td class="text-right">
+                      <button type="button" class="btn btn-danger" (click)="deleteSpeciality(employee._id, specialty._id)">Supprimer</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
       </div>
     </div>
   </div>

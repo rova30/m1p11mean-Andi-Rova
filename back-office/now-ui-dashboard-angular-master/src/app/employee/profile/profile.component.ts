@@ -2,19 +2,20 @@ import { Component, OnInit } from '@angular/core';
 import { EmployeeService } from '../../api/employee.service';
 import { ServiceService } from '../../api/service.service';
 
+
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
-    employee: any;
-    error: string;
-    loading: boolean = false;
-    dataEmployee: any; 
-    services: any[] = [];
-    selectedSpeciality: any;
-    specialityExistsError: boolean = false;
+  employee: any;
+  error: string;
+  loading: boolean = false;
+  dataEmployee: any; 
+  services: any[] = [];
+  selectedSpeciality: any;
+  specialityExistsError: boolean = false;
   
 
   constructor(private employeeService: EmployeeService, private serviceService: ServiceService) { }
@@ -57,21 +58,19 @@ export class ProfileComponent implements OnInit {
     );
   }
 
-
   getInfoEmployee(employeeId: string) {
     this.loading = true;
     this.employeeService.infoByEmployee(employeeId).subscribe(
-        (data: any) => {
-            this.dataEmployee = data;
-            
-            console.log(data);
-            this.loading = false;
-        },
-        (error: any) => {
-            console.error('Error getting infos:', error);
-            this.error = 'Error getting infos';
-            this.loading = false;
-        }
+      (data: any) => {
+        this.dataEmployee = data;
+        console.log(data);
+        this.loading = false;
+      },
+      (error: any) => {
+        console.error('Error getting infos:', error);
+        this.error = 'Error getting infos';
+        this.loading = false;
+      }
     );
   }
 
@@ -80,30 +79,39 @@ export class ProfileComponent implements OnInit {
       this.employeeService.addSpeciality(this.employee._id, this.selectedSpeciality).subscribe(
         (response: any) => {
           console.log('Speciality added successfully:', response);
-
           this.getInfoEmployee(this.employee._id);
         },
         (error: any) => {
           console.error('Error adding speciality:', error);
-
         }
       );
     }
+  }
+
+  deleteSpeciality(employeeId: string, specialityId: string) {
+    this.employeeService.deleteSpeciality(employeeId, specialityId).subscribe(
+      (response: any) => {
+        console.log('Speciality deleted successfully:', response);
+        this.getInfoEmployee(employeeId);
+      },
+      (error: any) => {
+        console.error('Error deleting speciality:', error);
+      }
+    );
   }
 
   checkSpecialityExistence(employeeId: string, specialityId: string) {
     this.employeeService.checkSpecialityExistence(employeeId, specialityId).subscribe(
       (data: any) => {
         if (data.exists) {
-            this.specialityExistsError = true; 
+          this.specialityExistsError = true; 
         } else {
-            this.specialityExistsError = false;
-            this.addSpecialityToEmployee();
+          this.specialityExistsError = false;
+          this.addSpecialityToEmployee();
         }
       },
       (error: any) => {
         console.error('Error checking speciality existence:', error);
-
       }
     );
   }
