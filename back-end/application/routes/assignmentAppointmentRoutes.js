@@ -173,4 +173,151 @@ router.put('/updateAssignmentStatus/:appointmentId/:assignmentId', async (req, r
 });
 
 
+// router.get('/assignmentsByEmployee', async (req, res) => {
+//     try {
+//         const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
+//         const db = client.db('finalexam');
+//         // Récupérer tous les employees
+//         const employees = await db.collection('Employee').find().toArray();
+
+//         // Créer un objet pour stocker les assignments de chaque employé
+//         const employeeAssignments = {};
+
+//         // Parcourir chaque Employee
+//         for (const employee of employees) {
+//             const employeeId = employee._id.toString();
+//             const assignmentsForEmployee = [];
+
+//             // Récupérer les assignments pour cet employee de la collection AssignmentAppointment
+//             const assignments = await db.collection('AssignmentAppointment').find().toArray();
+//             assignments.forEach(assignment => {
+//                 // Parcourir chaque élément de la liste assignments
+//                 assignment.assignments.forEach(assignmentItem => {
+//                     // Vérifier si l'ID de l'employé correspond à l'ID actuel
+//                     if (assignmentItem[0]._id.toString() === employeeId) {
+//                         assignmentsForEmployee.push(assignmentItem);
+//                     }
+//                 });
+//             });
+
+//             // Ajouter les assignments de l'employé au résultat
+//             employeeAssignments[employeeId] = assignmentsForEmployee;
+//         }
+
+//         res.json(employeeAssignments);
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ error: 'Erreur lors de la récupération des assignments par employee' });
+//     }
+// });
+
+
+
+// router.get('/assignmentsByEmployeeWithTotalDeadline', async (req, res) => {
+//     try {
+//         const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
+//         const db = client.db('finalexam');
+
+//         const employees = await db.collection('Employee').find().toArray();
+
+//         const employeeAssignmentsWithTotalDeadline = {};
+
+//         for (const employee of employees) {
+//             const employeeId = employee._id.toString();
+//             const assignmentsForEmployee = [];
+
+//             const assignments = await db.collection('AssignmentAppointment').find().toArray();
+//             assignments.forEach(assignment => {
+//                 assignment.assignments.forEach(assignmentItem => {
+//                     if (assignmentItem[0]._id.toString() === employeeId && assignmentItem[4] === 2) {
+//                         assignmentsForEmployee.push(assignmentItem);
+//                     }
+//                 });
+//             });
+
+//             const totalDeadlinePerDay = {};
+//             assignmentsForEmployee.forEach(assignment => {
+//                 const date = new Date(assignment[2]).toISOString().split('T')[0]; 
+//                 const deadline = assignment[1].deadline; 
+//                 totalDeadlinePerDay[date] = (totalDeadlinePerDay[date] || 0) + deadline; 
+//             });
+
+
+//             employeeAssignmentsWithTotalDeadline[employeeId] = totalDeadlinePerDay;
+//         }
+
+//         res.json(employeeAssignmentsWithTotalDeadline);
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ error: 'Erreur lors de la récupération des assignments par employee avec la somme des deadlines par jour' });
+//     }
+// });
+
+
+
+router.get('/assignmentsByEmployeeWithTotalDeadline1', async (req, res) => {
+    try {
+        const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
+        const db = client.db('finalexam');
+
+        // Récupérer tous les employees
+        const employees = await db.collection('Employee').find().toArray();
+
+        // Créer un objet pour stocker les assignments de chaque employé avec la somme des deadlines par jour
+        const employeeAssignmentsWithTotalDeadline = {};
+
+        // Parcourir chaque Employee
+        for (const employee of employees) {
+            const employeeId = employee._id.toString();
+            const assignmentsForEmployee = [];
+
+            // Récupérer les assignments pour cet employee de la collection AssignmentAppointment
+            const assignments = await db.collection('AssignmentAppointment').find().toArray();
+            assignments.forEach(assignment => {
+                // Parcourir chaque élément de la liste assignments
+                assignment.assignments.forEach(assignmentItem => {
+                    // Vérifier si l'ID de l'employé correspond à l'ID actuel et que le statut est égal à 2
+                    if (assignmentItem[0]._id.toString() === employeeId && assignmentItem[4] === 2) {
+                        assignmentsForEmployee.push(assignmentItem);
+                    }
+                });
+            });
+
+            // Calculer la somme des deadlines par jour
+            const totalDeadlinePerDay = {};
+            assignmentsForEmployee.forEach(assignment => {
+                const date = new Date(assignment[2]).toISOString().split('T')[0]; // Récupérer la date (jour)
+                const deadline = assignment[1].deadline; // Récupérer la deadline
+                totalDeadlinePerDay[date] = (totalDeadlinePerDay[date] || 0) + deadline; // Ajouter la deadline à la somme pour ce jour
+            });
+
+            // Calculer la moyenne pour les 3 derniers jours
+            const last3Days = new Array(3).fill(0).map((_, index) => {
+                const date = new Date();
+                date.setDate(date.getDate() - index);
+                return date.toISOString().split('T')[0];
+            });
+
+            console.log(last3Days);
+            let totalSum = 0;
+            let totalDays = 0;
+            last3Days.forEach(day => {
+                const totalDeadline = totalDeadlinePerDay[day] || 0;
+                totalSum += totalDeadline;
+                totalDays++;
+            });
+
+            const averageDeadline = totalDays === 0 ? 0 : totalSum / totalDays;
+
+            // Ajouter la moyenne pour les 3 derniers jours au résultat
+            employeeAssignmentsWithTotalDeadline[employeeId] = averageDeadline;
+        }
+
+        res.json(employeeAssignmentsWithTotalDeadline);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Erreur lors de la récupération des assignments par employee avec la somme des deadlines par jour' });
+    }
+});
+
 module.exports = router;
