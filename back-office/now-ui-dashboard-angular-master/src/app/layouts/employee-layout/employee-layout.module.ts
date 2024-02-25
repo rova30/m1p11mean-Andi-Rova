@@ -8,6 +8,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrModule } from 'ngx-toastr';
 import { TaskComponent } from '../../employee/task/task.component';
 import { AppointmentComponent } from '../../employee/appointment/appointment.component';
+import { ProfileComponent } from '../../employee/profile/profile.component';
 import { EmployeeService } from '../../api/employee.service';
 
 @NgModule({
@@ -22,6 +23,7 @@ import { EmployeeService } from '../../api/employee.service';
   declarations: [
     TaskComponent,
     AppointmentComponent,
+    ProfileComponent,
   ],providers: [
     EmployeeService
   ]

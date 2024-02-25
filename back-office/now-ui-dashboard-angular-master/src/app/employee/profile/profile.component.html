@@ -1,0 +1,72 @@
+<div class="panel-header panel-header-sm">
+</div>
+<div class="main-content">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title"> Vos spécialités</h4>
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newSpecialityModal">
+            Nouvelle spécialité
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+<table class="table" *ngFor="let datas of dataEmployee">
+  <thead>
+    <tr>
+      <th>Specialty</th>
+      <th class="text-right">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let specialty of datas.speciality">
+      <td>{{ specialty.name }}</td>
+      <td class="text-right">
+        <button type="button" class="btn btn-danger">Supprimer</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="newSpecialityModal" tabindex="-1" role="dialog" aria-labelledby="newSpecialityModalLabel"
+aria-hidden="true">
+<div class="modal-dialog modal-lg" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="newSpecialityModalLabel">Ajout spécialité</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <form enctype="multipart/form-data" (submit)="checkSpecialityExistence(employee._id, selectedSpeciality._id)">
+        <div class="modal-body">
+          <h5></h5>
+          <div *ngIf="specialityExistsError" class="alert alert-danger" role="alert">
+            Vous avez déjà cette spécialité.
+        </div>        
+          <div class="row">
+            <div class="col-lg-12">
+              <select class="form-control" [(ngModel)]="selectedSpeciality" name="selectedSpeciality">
+                  <option value="" disabled selected>Choisir un service</option>
+                  <option *ngFor="let service of services" [ngValue]="service">{{ service.name }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+          <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </div>
+      </form>      
+  </div>
+</div>
+</div>

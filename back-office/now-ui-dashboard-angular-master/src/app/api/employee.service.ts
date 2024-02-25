@@ -46,7 +46,26 @@ export class EmployeeService {
         catchError(this.handleError)
       );
   }
+
+  infoByEmployee(employeeId:string): Observable<any> {
+    return this.http.get<any[]>(`${baseUrl('/employees/infoByEmployee/' + employeeId )}`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+
+  addSpeciality(employeeId: string, speciality: any): Observable<any> {
+    return this.http.put<any>(`${baseUrl('/employees/addSpeciality/' + employeeId )}`, speciality).pipe(
+      catchError(this.handleError)
+    );
+  }  
   
+  checkSpecialityExistence(employeeId: string, specialityId: string): Observable<any> {
+    return this.http.get<any>(`${baseUrl('/employees/checkSpecialityExistence/' + employeeId + '/' + specialityId )}`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: any) {
     console.error('An error occurred:', error);
     return throwError(error);

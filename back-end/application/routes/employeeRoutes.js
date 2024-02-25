@@ -3,6 +3,7 @@ const router = express.Router();
 const bodyParser = require('body-parser');
 const generateRandomToken = require('../utils/function');
 const MongoClient = require('mongodb').MongoClient;
+const { ObjectId } = require('mongodb');
 
 const connectionString = 'mongodb+srv://webavanceem1:final@clusterm1.kqgspnb.mongodb.net/?retryWrites=true&w=majority';
 
@@ -197,6 +198,87 @@ router.put('/updateEmployee/:id', async (req, res) => {
       res.status(500).json({ error: 'Error getting employee' });
     }
   });
+
+
+  router.put('/addSpeciality/:employeeId', async (req, res) => {
+    try {
+        const { employeeId } = req.params;
+        const newSpeciality = req.body;
+        const objectId = new ObjectId(employeeId);
+
+        const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
+        const db = client.db('finalexam');
+
+        const employee = await db.collection('Employee').findOne({ '_id': objectId });
+        if (!employee) {
+            return res.status(404).json({ message: 'Employé non trouvé' });
+        }
+        employee.speciality.push(newSpeciality);
+        await db.collection('Employee').updateOne({ '_id': objectId }, { $set: { speciality: employee.speciality } });
+
+        client.close();
+
+        return res.status(200).json({ message: 'Spécialité ajoutée avec succès à l\'employé' });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Erreur lors de l\'ajout de la spécialité à l\'employé' });
+    }
+});
+
+
+
+router.get('/checkSpecialityExistence/:employeeId/:specialityId', async (req, res) => {
+  try {
+      const { employeeId, specialityId } = req.params;
+      console.log(req.params);
+      const objectId = new ObjectId(employeeId);
+
+      const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
+      const db = client.db('finalexam');
+
+      const employee = await db.collection('Employee').findOne({ '_id': objectId });
+      if (!employee) {
+          return res.status(404).json({ error: 'Employee not found' });
+      }
+
+      const existingSpeciality = employee.speciality.find(spec => spec._id.toString() === specialityId);
+      if (existingSpeciality) {
+          return res.json({ exists: true }); 
+      } else {
+          return res.json({ exists: false }); 
+      }
+      client.close();
+  } catch (error) {
+      console.error('Error checking speciality existence:', error);
+      res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+
+router.get('/infoByEmployee/:employeeId', async (req, res) => {
+  try {
+    const { employeeId } = req.params;
+
+    const objectId = new ObjectId(employeeId);
+
+    const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
+    const db = client.db('finalexam');
+
+    const infos = await db.collection('Employee').find({
+      '_id': objectId
+    }).toArray();
+
+    // console.log(req.params);
+    // console.log(infos);
+    res.json(infos);
+    client.close();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur lors de la récupération des employés' });
+  }
+});
+
 
 
 module.exports = router;
