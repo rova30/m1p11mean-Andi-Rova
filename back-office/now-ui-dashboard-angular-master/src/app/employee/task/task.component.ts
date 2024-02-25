@@ -1,4 +1,3 @@
-// task.component.ts
 import { Component, OnInit } from '@angular/core';
 import * as employeeService from '../../api/employee.service';
 import { AssignmentAppointmentService } from '../../api/assignmentappointment.service';
@@ -15,13 +14,15 @@ export class TaskComponent implements OnInit {
   loading: boolean = false;
   dataAssignment: any; // Variable pour stocker les données
   totalCommissionSum: number = 0;
-
+  selectedDate: string; // Variable pour stocker la date sélectionnée
 
   constructor(private employeeService: employeeService.EmployeeService, private assignmentService: AssignmentAppointmentService) { }
 
   ngOnInit() {
     const token = sessionStorage.getItem('token_employee');
     this.getEmployee(token);
+    // Initialisez la date sélectionnée avec la date d'aujourd'hui par défaut
+    this.selectedDate = new Date().toISOString().split('T')[0];
   }
 
   formatTime(dateTime: string): string {
@@ -36,9 +37,8 @@ export class TaskComponent implements OnInit {
         this.employee = data.employee;
         this.loading = false;
         if (this.employee) {
-          const today = new Date().toISOString().split('T')[0]; // Obtenez la date au format YYYY-MM-DD
           const statut = 2; // Changez le statut selon vos besoins
-          this.getAppointmentsByEmployeeId(this.employee._id, today, statut);
+          this.getAppointmentsByEmployeeId(this.employee._id, this.selectedDate, statut);
         } else {
           console.error('Employee is not defined yet.');
         }
@@ -58,8 +58,6 @@ export class TaskComponent implements OnInit {
       (data: any) => {
         this.dataAssignment = data; // Stockez les données récupérées
         this.totalCommissionSum = this.dataAssignment.reduce((acc, curr) => acc + curr.totalCommission, 0);
-     
-        console.log(data);
         this.loading = false;
       },
       (error: any) => {
@@ -68,5 +66,11 @@ export class TaskComponent implements OnInit {
         this.loading = false;
       }
     );
+  }
+
+  onDateChange() {
+    // Appeler la fonction pour récupérer les rendez-vous avec la nouvelle date sélectionnée
+    const statut = 2; // Changez le statut selon vos besoins
+    this.getAppointmentsByEmployeeId(this.employee._id, this.selectedDate, statut);
   }
 }

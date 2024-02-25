@@ -106,7 +106,7 @@ export class CategoryComponent implements OnInit {
 
     loadExpensesCategory() {
         this.error = '';
-        this.loadingIn = true;
+        this.loadingEx = true;
       
         this.expenseService.getExpensesCategory(this.currentPageIn, this.pageSize).subscribe(
           (data: any[]) => {
@@ -116,7 +116,7 @@ export class CategoryComponent implements OnInit {
           (error: any) => {
             console.error('Error fetching expensesCat:', error);
             this.error = 'Error fetching expensesCat';
-            this.loadingIn = false;
+            this.loadingEx = false;
           }
         );
       }
