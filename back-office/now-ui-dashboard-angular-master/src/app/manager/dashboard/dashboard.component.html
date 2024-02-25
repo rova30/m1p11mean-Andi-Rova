@@ -18,79 +18,7 @@
 <br><br>
 <div class="main-content">
   <div class="row">
-    <div class="col-lg-6">
-      <div class="card card-chart">
-        <div class="card-header">
-          <h5 class="card-category">Global Sales</h5>
-          <h4 class="card-title">Nombre de Réservations</h4>
-          <div ngbDropdown>
-            <button type="button" class="btn btn-round btn-default dropdown-toggle btn-simple btn-icon no-caret" ngbDropdownToggle>
-              <i class="now-ui-icons loader_gear"></i>
-            </button>
-            <div ngbDropdownMenu class="dropdown-menu-right">
-              <a class="dropdown-item" href="#">Action</a>
-              <a class="dropdown-item" href="#">Another action</a>
-              <a class="dropdown-item" href="#">Something else here</a>
-              <a class="dropdown-item text-danger" href="#">Remove Data</a>
-            </div>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="chart-area">
-            <canvas baseChart id="lineChartExample"
-                        [datasets]="lineChartData"
-                        [labels]="lineChartLabels"
-                        [colors]="lineChartColors"
-                        [options]="lineChartOptions"
-                        [chartType]="lineChartType"
-                        (chartHover)="chartHovered($event)"
-                        (chartClick)="chartClicked($event)"></canvas>
-          </div>
-        </div>
-        <div class="card-footer">
-          <div class="stats">
-            <i class="now-ui-icons arrows-1_refresh-69"></i> Just Updated
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-4 col-md-6">
-      <div class="card card-chart">
-        <div class="card-header">
-          <h5 class="card-category">2018 Sales</h5>
-          <h4 class="card-title">All products</h4>
-          <div ngbDropdown>
-            <button type="button" class="btn btn-round btn-default dropdown-toggle btn-simple btn-icon no-caret" ngbDropdownToggle>
-              <i class="now-ui-icons loader_gear"></i>
-            </button>
-            <div ngbDropdownMenu class="dropdown-menu-right">
-              <a class="dropdown-item" href="#">Action</a>
-              <a class="dropdown-item" href="#">Another action</a>
-              <a class="dropdown-item" href="#">Something else here</a>
-              <a class="dropdown-item text-danger" href="#">Remove Data</a>
-            </div>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="chart-area">
-            <!-- <canvas id="lineChartExampleWithNumbersAndGrid"></canvas> -->
-            <canvas baseChart id="lineChartExampleWithNumbersAndGrid"
-                        [datasets]="lineChartWithNumbersAndGridData"
-                        [labels]="lineChartWithNumbersAndGridLabels"
-                        [colors]="lineChartWithNumbersAndGridColors"
-                        [options]="lineChartWithNumbersAndGridOptions"
-                        [chartType]="lineChartWithNumbersAndGridType"
-                        (chartHover)="chartHovered($event)"
-                        (chartClick)="chartClicked($event)"></canvas>
-          </div>
-        </div>
-        <div class="card-footer">
-          <div class="stats">
-            <i class="now-ui-icons arrows-1_refresh-69"></i> Just Updated
-          </div>
-        </div>
-      </div>
-    </div>
+
     <div class="col-lg-6 col-md-6">
       <div class="card card-chart">
         <div class="card-header">
@@ -107,6 +35,34 @@
                         [chartType]="lineChartGradientsNumbersType"
                         (chartHover)="chartHovered($event)"
                         (chartClick)="chartClicked1($event)"></canvas>
+          </div>
+        </div>
+        <div class="card-footer">
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6 col-md-6">
+      <div class="card card-chart">
+        <div class="card-header">
+          <h5 class="card-category"></h5>
+          <h4 class="card-title">Temps moyen de travail (3 derniers</h4>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive" style="max-height: 195px; overflow-y: auto;">
+            <table class="table">
+              <thead class="text-primary">
+                <th>Employé</th>
+                <th>Temps (mn)</th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let timework of timeworks">  
+                  <td>{{ timework.employee.firstName }} {{ timework.employee.lastName }}</td>
+                  <td>{{ timework.averageDeadline }}</td>
+                </tr>
+
+              </tbody>
+            </table>
           </div>
         </div>
         <div class="card-footer">

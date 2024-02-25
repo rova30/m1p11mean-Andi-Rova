@@ -3,6 +3,7 @@ import * as Chartist from 'chartist';
 import { IncomeService } from '../../api/income.service';
 import { AppointmentService } from '../../api/appointment.service';
 import { ExpenseService } from '../../api/expense.service';
+import { EmployeeService } from '../../api/employee.service';
 import { ModalcaComponent } from '../modalca/modalca.component';
 import { ModalrdvComponent } from '../modalrdv/modalrdv.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -54,6 +55,7 @@ export class DashboardComponent implements OnInit {
     dateTime : '',
     amount : ''
   };
+  timeworks: any[] = [];
 
   formatDate(dateString: string): string {
     const date = new Date(dateString);
@@ -162,7 +164,7 @@ export class DashboardComponent implements OnInit {
       return "rgb(" + r + ", " + g + ", " + b + ")";
     }
   }
-  constructor(private incomeService: IncomeService, private modalService: NgbModal, private appointmentService: AppointmentService, private expenseService: ExpenseService) {
+  constructor(private employeeService: EmployeeService, private incomeService: IncomeService, private modalService: NgbModal, private appointmentService: AppointmentService, private expenseService: ExpenseService) {
     this.lineBigDashboardChartData = [];
     this.lineBigDashboardChartLabels = [];
     this.lineChartGradientsNumbersData = [];
@@ -190,7 +192,17 @@ export class DashboardComponent implements OnInit {
       });
     });
   }
-  
+
+  public avgtimeWork(): void {
+    this.employeeService.getAverageTimeWork().subscribe(
+      (data: any[]) => {
+        this.timeworks = data;
+      },
+      (error: any) => {
+        console.error('Error fetching customers:', error);
+      }
+    );
+  }
 
 updateTable(): void {
   this.resumeBenefice(this.selectedYear);
@@ -291,6 +303,7 @@ getAppointmentsByMonth(year:number): void {
     this.updateChartData(); // Mettre à jour les données du graphique avec l'année sélectionnée par défaut
     this.updateTable();
     this.loadExpensesCategory();
+    this.avgtimeWork();
 
 
     this.lineBigDashboardChartOptions = {
@@ -453,79 +466,6 @@ getAppointmentsByMonth(year:number): void {
         }
       }
     };
-
-    this.canvas = document.getElementById("lineChartExample");
-    this.ctx = this.canvas.getContext("2d");
-
-    this.gradientStroke = this.ctx.createLinearGradient(500, 0, 100, 0);
-    this.gradientStroke.addColorStop(0, '#80b6f4');
-    this.gradientStroke.addColorStop(1, this.chartColor);
-
-    this.gradientFill = this.ctx.createLinearGradient(0, 170, 0, 50);
-    this.gradientFill.addColorStop(0, "rgba(128, 182, 244, 0)");
-    this.gradientFill.addColorStop(1, "rgba(249, 99, 59, 0.40)");
-
-    this.lineChartData = [
-        {
-          label: "Active Users",
-          pointBorderWidth: 2,
-          pointHoverRadius: 4,
-          pointHoverBorderWidth: 1,
-          pointRadius: 4,
-          fill: true,
-          borderWidth: 2,
-          data: [542, 480, 430, 550, 530, 453, 380, 434, 568, 610, 700, 630]
-        }
-      ];
-      this.lineChartColors = [
-       {
-         borderColor: "#f96332",
-         pointBorderColor: "#FFF",
-         pointBackgroundColor: "#f96332",
-         backgroundColor: this.gradientFill
-       }
-     ];
-    this.lineChartLabels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    this.lineChartOptions = this.gradientChartOptionsConfiguration;
-
-    this.lineChartType = 'line';
-
-    this.canvas = document.getElementById("lineChartExampleWithNumbersAndGrid");
-    this.ctx = this.canvas.getContext("2d");
-
-    this.gradientStroke = this.ctx.createLinearGradient(500, 0, 100, 0);
-    this.gradientStroke.addColorStop(0, '#18ce0f');
-    this.gradientStroke.addColorStop(1, this.chartColor);
-
-    this.gradientFill = this.ctx.createLinearGradient(0, 170, 0, 50);
-    this.gradientFill.addColorStop(0, "rgba(128, 182, 244, 0)");
-    this.gradientFill.addColorStop(1, this.hexToRGB('#18ce0f', 0.4));
-
-    this.lineChartWithNumbersAndGridData = [
-        {
-          label: "Email Stats",
-           pointBorderWidth: 2,
-           pointHoverRadius: 4,
-           pointHoverBorderWidth: 1,
-           pointRadius: 4,
-           fill: true,
-           borderWidth: 2,
-          data: [40, 500, 650, 700, 1200, 1250, 1300, 1900]
-        }
-      ];
-      this.lineChartWithNumbersAndGridColors = [
-       {
-         borderColor: "#18ce0f",
-         pointBorderColor: "#FFF",
-         pointBackgroundColor: "#18ce0f",
-         backgroundColor: this.gradientFill
-       }
-     ];
-    this.lineChartWithNumbersAndGridLabels = ["12pm,", "3pm", "6pm", "9pm", "12am", "3am", "6am", "9am"];
-    this.lineChartWithNumbersAndGridOptions = this.gradientChartOptionsConfigurationWithNumbersAndGrid;
-
-    this.lineChartWithNumbersAndGridType = 'line';
-
 
 
 

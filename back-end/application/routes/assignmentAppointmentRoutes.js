@@ -254,7 +254,6 @@ router.put('/updateAssignmentStatus/:appointmentId/:assignmentId', async (req, r
 // });
 
 
-
 router.get('/assignmentsByEmployeeWithTotalDeadline1', async (req, res) => {
     try {
         const client = await MongoClient.connect(connectionString, { useUnifiedTopology: true });
@@ -263,8 +262,8 @@ router.get('/assignmentsByEmployeeWithTotalDeadline1', async (req, res) => {
         // Récupérer tous les employees
         const employees = await db.collection('Employee').find().toArray();
 
-        // Créer un objet pour stocker les assignments de chaque employé avec la somme des deadlines par jour
-        const employeeAssignmentsWithTotalDeadline = {};
+        // Créer un tableau pour stocker les assignments de chaque employé avec la somme des deadlines par jour
+        const employeeAssignmentsWithTotalDeadline = [];
 
         // Parcourir chaque Employee
         for (const employee of employees) {
@@ -298,7 +297,6 @@ router.get('/assignmentsByEmployeeWithTotalDeadline1', async (req, res) => {
                 return date.toISOString().split('T')[0];
             });
 
-            console.log(last3Days);
             let totalSum = 0;
             let totalDays = 0;
             last3Days.forEach(day => {
@@ -309,9 +307,15 @@ router.get('/assignmentsByEmployeeWithTotalDeadline1', async (req, res) => {
 
             const averageDeadline = totalDays === 0 ? 0 : totalSum / totalDays;
 
-            // Ajouter la moyenne pour les 3 derniers jours au résultat
-            employeeAssignmentsWithTotalDeadline[employeeId] = averageDeadline;
+            // Ajouter la moyenne pour les 3 derniers jours et les détails de l'employé au tableau
+            employeeAssignmentsWithTotalDeadline.push({
+                employee: employee,
+                averageDeadline: averageDeadline
+            });
         }
+
+        // Trier les résultats par moyenne de deadline décroissante
+        employeeAssignmentsWithTotalDeadline.sort((a, b) => b.averageDeadline - a.averageDeadline);
 
         res.json(employeeAssignmentsWithTotalDeadline);
     } catch (error) {

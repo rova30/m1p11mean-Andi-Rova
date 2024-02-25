@@ -72,6 +72,11 @@ export class EmployeeService {
     );
   }
 
+  getAverageTimeWork(): Observable<any> {
+    return this.http.get<any[]>(`${baseUrl('/assignmentAppointment/assignmentsByEmployeeWithTotalDeadline1')}`).pipe(
+      catchError(this.handleError)
+    );
+  }
   
 
   private handleError(error: any) {
