@@ -50,7 +50,14 @@ export class DashboardComponent implements OnInit {
   selectedMonth = 0;
   public beneficesData: any[] = [];
   public category: any[] = [];
+  public categoryIn: any[] = [];
   public expenseData: any = {
+    category: '', 
+    dateTime : '',
+    amount : ''
+  };
+
+  public incomeData: any = {
     category: '', 
     dateTime : '',
     amount : ''
@@ -85,6 +92,14 @@ export class DashboardComponent implements OnInit {
       amount : ''
     };
   }
+
+  resetFormIn() {
+    this.incomeData = {
+      category: '',
+      dateTime : '',
+      amount : ''
+    };
+  }
   
   addExpense() {
     this.expenseService.addExpense(this.expenseData).subscribe(
@@ -98,6 +113,20 @@ export class DashboardComponent implements OnInit {
       }
     );
   }
+
+  addIncome() {
+    this.incomeService.addIncome(this.incomeData).subscribe(
+      (response) => {
+        console.log('income added successfully:', response);
+        this.resetFormIn();
+        this.updateTable();
+      },
+      (error) => {
+        console.error('Error adding income:', error);
+      }
+    );
+  }
+  
   
   public loadExpensesCategory() {
     this.expenseService.getExpensesCategory(1, 100).subscribe(
@@ -106,6 +135,17 @@ export class DashboardComponent implements OnInit {
       },
       (error: any) => {
         console.error('Error fetching expensesCat:', error);
+      }
+    );
+  }
+
+  public loadIncomesCategory() {
+    this.incomeService.getIncomesCategory(1, 100).subscribe(
+      (data: any[]) => {
+        this.categoryIn = data;
+      },
+      (error: any) => {
+        console.error('Error fetching incomesCat:', error);
       }
     );
   }
@@ -303,6 +343,7 @@ getAppointmentsByMonth(year:number): void {
     this.updateChartData(); // Mettre à jour les données du graphique avec l'année sélectionnée par défaut
     this.updateTable();
     this.loadExpensesCategory();
+    this.loadIncomesCategory();
     this.avgtimeWork();
 
 
