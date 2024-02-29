@@ -5,7 +5,8 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-login-employee',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
+
 })
 export class LoginEmployeeComponent implements OnInit {
   focus;
@@ -15,8 +16,8 @@ export class LoginEmployeeComponent implements OnInit {
   constructor(private employeeService: employeeService.EmployeeService) { }
 
   loginData = {
-    email: '',
-    password: ''
+    email: 'wonkaCha11@gmail.com',
+    password: 'chocolat11'
 };
   onSubmit() {
     this.loading = true;

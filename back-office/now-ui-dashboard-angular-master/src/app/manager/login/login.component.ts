@@ -16,8 +16,8 @@ export class LoginManagerComponent implements OnInit {
   constructor(private managerService: managerService.ManagerService) { }
 
   loginData = {
-    email: '',
-    password: ''
+    email: 'andi.nomenjanahary2003@gmail.com',
+    password: 'andiK23'
 };
   onSubmit() {
     this.loading = true;
