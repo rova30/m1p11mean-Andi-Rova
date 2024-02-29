@@ -6,6 +6,12 @@ const MongoClient = require('mongodb').MongoClient;
 const connectionString = 'mongodb+srv://webavanceem1:final@clusterm1.kqgspnb.mongodb.net/?retryWrites=true&w=majority';
 
 router.use(bodyParser.json());
+const getAllEmployeeUnavailability = require('../utils/function');
+
+const trouverIntersections = require('../utils/function');
+const generateAvailableSlots = require('../utils/function');
+
+
 
 router.get('/appointmentsByMonth/:year', async (req, res) => {
   try {
@@ -77,6 +83,23 @@ router.get('/appointmentsByYearAndMonth/:year/:month', async (req, res) => {
     res.status(500).json({ error: 'Error fetching appointments by year and month' });
   }
 });
+
+
+router.get('/getAvalaibleDate/:deadline', async (req, res) => {
+  const servicesDuration = req.params.deadline;
+
+  console.log("fefefef"+servicesDuration)
+  const result = getAllEmployeeUnavailability()
+  const results = trouverIntersections(result);
+
+  const workingHours = { start: '07:00', end: '18:00' };
+  
+  
+  const availableSlots = generateAvailableSlots(workingHours, results, 7, parseInt(servicesDuration));
+  res.json(availableSlots);
+});
+
+
 
 
 

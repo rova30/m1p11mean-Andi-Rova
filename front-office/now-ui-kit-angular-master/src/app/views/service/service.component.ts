@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ServiceService } from '../../api/service.service';
 import Swal from 'sweetalert2';
+import { AppointmentService } from 'app/api/appointment.service';
 
 @Component({
   selector: 'app-service',
@@ -17,13 +18,29 @@ export class ServiceComponent implements OnInit {
     selectedService: any;
     loading: boolean = false;
     selectedServices: any[] = [];
+    totalServicesDuration: number = 0;
+    avalaibleDate: any[] = [];
 
 
 
-    constructor(private serviceService: ServiceService) { }   
+    constructor(private serviceService: ServiceService,private appointmentService: AppointmentService) { }   
     ngOnInit() {
       this.getServices();
       this.getServicesCount();
+    }
+
+    getAvalaibleDate(deadline:number) {
+      if(this.totalServicesDuration != 0){
+        this.appointmentService.getAvailableDate(deadline).subscribe(
+          (data: any[]) => {
+            this.avalaibleDate = data;
+          },
+          (error: any) => {
+            console.error('Error fetching avalaibleDate:', error);
+            this.error = 'Error fetching avalaibleDate';
+          }
+        );
+      }
     }
 
     getServicesCount() {
@@ -36,6 +53,10 @@ export class ServiceComponent implements OnInit {
         }
       );
     }
+
+
+
+
     getServices() {
     this.error = '';
     this.loading = true;
@@ -70,12 +91,21 @@ export class ServiceComponent implements OnInit {
     
   addService(selectedService: any) {
       this.selectedServices.push(selectedService);
+      this.totalServicesDuration += selectedService.deadline;
+      this.getAvalaibleDate(this.totalServicesDuration);
+
   }
 
-  removeService(index: number) {
+  removeService(index: number,selectedService: any) {
     this.selectedServices.splice(index, 1);
+    this.totalServicesDuration -= selectedService.deadline;
+    this.getAvalaibleDate(this.totalServicesDuration);
+
   }
-    ngOnDestroy(){
-    }
+
+
+
+  ngOnDestroy(){
+  }
 
 }

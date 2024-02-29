@@ -15,6 +15,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { environment } from 'environments/environment';
 import {initializeApp} from 'firebase/app';
 import { ServiceService } from './api/service.service';
+import { AppointmentService } from './api/appointment.service';
 
 initializeApp(environment.firebase);
 
@@ -37,7 +38,7 @@ initializeApp(environment.firebase);
     ],
     providers: [
         AuthService,
-        ServiceService
+        ServiceService,AppointmentService
     ],
     bootstrap: [AppComponent]
 })
