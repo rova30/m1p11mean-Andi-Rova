@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ServiceService } from '../../api/service.service';
+import { Modalservicedetail } from '../modalservicedetail/modalservicedetail.component';
 
 @Component({
   selector: 'app-service',
@@ -21,7 +23,7 @@ export class ServiceComponent implements OnInit {
       commission: ''
     };
   
-    constructor(private serviceService: ServiceService) { }
+    constructor(private modalService: NgbModal, private serviceService: ServiceService) { }
   
     ngOnInit() {
       this.getServicesCount();
@@ -37,6 +39,19 @@ export class ServiceComponent implements OnInit {
           console.error('Error fetching total Services count:', error);
         }
       );
+    }
+
+    openServiceModal(serviceId: string) {
+      this.serviceService.getServicesdetail(serviceId).subscribe((service: any) => {
+
+        const modalRef = this.modalService.open(Modalservicedetail, { centered: true, backdrop: false });
+        modalRef.componentInstance.service = service;
+        modalRef.componentInstance.serviceUpdated.subscribe(updated => {
+          if (updated) {
+            this.ngOnInit();
+          }
+        });
+      });
     }
   
     getServices(page: number, pageSize: number) {

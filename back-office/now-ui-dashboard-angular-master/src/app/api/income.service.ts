@@ -17,6 +17,13 @@ export class IncomeService {
       );
   }
 
+  addIncome(serviceData: any): Observable<any> {
+    return this.http.post(baseUrl('/incomes/addIncome'), serviceData)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   getIncomesByYearAndMonth(year: number, month: number): Observable<any[]> {
     return this.http.get<any[]>(`${baseUrl('/incomes/incomesByYearAndMonth/' + year + '/' + month)}`).pipe(
       catchError(this.handleError)

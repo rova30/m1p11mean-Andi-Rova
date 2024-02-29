@@ -67,10 +67,10 @@
             <div class="col-md-4" *ngFor="let service of services">
               <div class="card card-user">
                 <div class="card-body">
-                  <div class="author">
-                    <a href="#">
-                      <h5 class="title">{{ service.name }}</h5>
-                    </a>
+                  <div (click)="openServiceModal(service._id)" class="author">
+              
+                      <h5  class="title">{{ service.name }}</h5>
+                
                   </div>              
                   <p class="description text-center">
                     Durée : {{ service.deadline }} mn

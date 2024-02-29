@@ -31,6 +31,21 @@ export class ServiceService {
       );
   }
 
+  updateService(serviceId: string, serviceData: any): Observable<any> {
+    const url = `${baseUrl('/services/service')}/${serviceId}`; // Retirez la barre oblique après '/service'
+    return this.http.put(url, serviceData)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+  
+
+  getServicesdetail(id: String): Observable<any[]> {
+    const url = `${baseUrl('/services/service/'+ id)}`;
+    return this.http.get<any[]>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
   
   private handleError(error: any) {
     console.error('An error occurred:', error);

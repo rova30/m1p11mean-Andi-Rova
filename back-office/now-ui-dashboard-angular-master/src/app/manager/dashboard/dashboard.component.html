@@ -46,7 +46,7 @@
       <div class="card card-chart">
         <div class="card-header">
           <h5 class="card-category"></h5>
-          <h4 class="card-title">Temps moyen de travail (3 derniers</h4>
+          <h4 class="card-title">Temps moyen de travail (last 3 days)</h4>
         </div>
         <div class="card-body">
           <div class="table-responsive" style="max-height: 195px; overflow-y: auto;">
@@ -76,6 +76,9 @@
         <div class="card-header">
           <h5 class="card-category"></h5>
           <h4 class="card-title"> Bénéfices</h4>
+          <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#newIncomeModal" style="float: right;">
+            Nouvelle entrée
+          </button>
           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newExpenseModal" style="float: right;">
             Nouveau dépense
           </button>
@@ -85,7 +88,7 @@
           <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="newExpenseModalLabel">Ajout type dépense</h5>
+                <h5 class="modal-title" id="newExpenseModalLabel">Ajout dépense</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -120,6 +123,50 @@
             </div>
           </div>
         </div>
+
+          <div class="modal fade" id="newIncomeModal" tabindex="-1" role="dialog" aria-labelledby="newIncomeModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="newIncomeModalLabel">Ajout entrée</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <form (submit)="addIncome()" enctype="multipart/form-data">
+                <div class="modal-body">
+                  <h5></h5>
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <select class="form-control" [(ngModel)]="incomeData.category" name="category">
+                        <option value="" disabled selected>Choisir un type d'entrée</option>
+                        <option *ngFor="let inCat of categoryIn" [ngValue]="inCat">{{ inCat.type }}</option>
+                      </select>
+                    </div>
+                    <div class="col-lg-12">
+                      <div class="input-group form-group-no-border input-lg">
+                        <input type="datetime-local" class="form-control" name="dateTime" [(ngModel)]="incomeData.dateTime"  step="any" placeholder="Date">
+                      </div>
+                    </div>
+                    <div class="col-lg-12">
+                      <div class="input-group form-group-no-border input-lg">
+                        <input type="number" class="form-control" name="amount" [(ngModel)]="incomeData.amount" step="any" placeholder="Prix">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                  <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+              </form>              
+            </div>
+          </div>
+        </div>
+
+
+
         </div>
         <div class="card-body">
           <div class="table-responsive">

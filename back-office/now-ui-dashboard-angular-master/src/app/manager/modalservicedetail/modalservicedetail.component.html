@@ -1,0 +1,29 @@
+<!-- HTML template for modal -->
+<div class="modal-header">
+    <h4 class="modal-title">{{ service.name }}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="form-group">
+        <label for="name">Nom du service</label>
+        <input type="text" class="form-control" id="name" [(ngModel)]="service.name" name="name">
+    </div>
+    <div class="form-group">
+        <label for="deadline">Durée (mn)</label>
+        <input type="number" class="form-control" id="deadline" [(ngModel)]="service.deadline" name="deadline">
+    </div>
+    <div class="form-group">
+        <label for="cost">Prix normal (Ar)</label>
+        <input type="number" class="form-control" id="cost" [(ngModel)]="service.cost" name="cost">
+    </div>
+    <div class="form-group">
+        <label for="commission">Commission (%)</label>
+        <input type="number" class="form-control" id="commission" [(ngModel)]="service.commission" name="commission">
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="activeModal.close('Close click')">Fermer</button>
+    <button type="button" class="btn btn-primary" (click)="save()">Enregistrer</button>
+</div>
