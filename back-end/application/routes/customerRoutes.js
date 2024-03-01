@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
 
 const connectionString = 'mongodb+srv://webavanceem1:final@clusterm1.kqgspnb.mongodb.net/?retryWrites=true&w=majority';
-const generateRandomToken = require('../utils/function');
+const generateRandomToken = require('../utils/utils')
 
 router.use(bodyParser.json());
 // tout ce qui est rattaché au customer
@@ -64,6 +64,7 @@ router.post('/loginCustomer', async (req, res) => {
         res.status(200).json({ message: "Connexion réussie",customer: customer, token: token });
       } else {
         const newTokenValue = generateRandomToken(40);
+        console.log(newTokenValue)
         const newToken = {
           customer: customer._id,
           token: newTokenValue,
