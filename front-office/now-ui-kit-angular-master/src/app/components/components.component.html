@@ -10,48 +10,12 @@
             <h3>Laissez nos experts s'occuper de vous.</h3>
             <button class="btn btn-primary btn-round btn-lg" type="button" routerLink="/service"  [@fadeInOutAnimation]>Commencer l'expérience</button>
         </div>
-          <h6 class="category category-absolute">Designed by
-              <a href="https://invisionapp.com/" target="_blank">
-                  <img src="assets/img/invision-white-slim.png" class="invision-logo" />
-              </a>. Coded by
-              <a href="https://www.creative-tim.com" target="_blank">
-                  <img src="assets/img/creative-tim-white-slim2.png" class="creative-tim-logo" />
-              </a>.</h6>
+            <h6 class="category category-absolute">
+                &copy;
+            {{data | date: 'yyyy'}},
+            <a href="https://www.linkedin.com/in/rova-30r/" target="_blank">ROBEL Rova Fabrice</a> & 
+            <a href="https://www.linkedin.com/in/andi-rakotonirina-367011271/" target="_blank">RAKOTONIRINA Nomenjanahary Andi</a>.
+            </h6>
       </div>
   </div>
-
-  <footer class="footer" data-background-color="black">
-      <div class="container">
-          <nav>
-              <ul>
-                  <li>
-                      <a href="https://www.creative-tim.com">
-                          Creative Tim
-                      </a>
-                  </li>
-                  <li>
-                      <a href="https://www.creative-tim.com/about-us">
-                          About Us
-                      </a>
-                  </li>
-                  <li>
-                      <a href="http://blog.creative-tim.com">
-                          Blog
-                      </a>
-                  </li>
-                  <li>
-                      <a href="https://github.com/creativetimofficial/now-ui-kit/blob/master/LICENSE.md">
-                          MIT License
-                      </a>
-                  </li>
-              </ul>
-          </nav>
-          <div class="copyright">
-              &copy;
-            {{data | date: 'yyyy'}},
-              <a href="https://www.linkedin.com/in/rova-30r/" target="_blank">ROBEL Rova Fabrice</a> & 
-              <a href="https://www.linkedin.com/in/andi-rakotonirina-367011271/" target="_blank">RAKOTONIRINA Nomenjanahary Andi</a>.
-          </div>
-      </div>
-  </footer>
 </div>

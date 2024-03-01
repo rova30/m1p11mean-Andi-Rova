@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
-const generateRandomToken = require('../utils/function');
+const generateRandomToken = require('../utils/utils');
 const MongoClient = require('mongodb').MongoClient;
 const { ObjectId } = require('mongodb');
 
