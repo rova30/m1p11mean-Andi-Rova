@@ -1,13 +1,25 @@
 const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
-const generateRandomToken = require('../utils/utils');
 const MongoClient = require('mongodb').MongoClient;
 const { ObjectId } = require('mongodb');
 
 const connectionString = 'mongodb+srv://webavanceem1:final@clusterm1.kqgspnb.mongodb.net/?retryWrites=true&w=majority';
 
 router.use(bodyParser.json());
+
+
+function generateRandomToken(length) {
+  const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let token = '';
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    token += characters.charAt(randomIndex);
+  }
+
+  return token;
+}
 
 router.post('/addEmployee', async (req, res) => {
   try {
@@ -149,6 +161,7 @@ router.put('/updateEmployee/:id', async (req, res) => {
           res.status(200).json({ message: "Connexion réussie",employee: employee, token: token });
         } else{
           const newTokenValue = generateRandomToken(40);
+          console.log(newTokenValue)
           const newToken = {
             employee: employee._id,
             token: newTokenValue,
