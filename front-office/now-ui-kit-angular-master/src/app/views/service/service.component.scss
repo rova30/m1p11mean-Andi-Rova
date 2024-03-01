@@ -98,3 +98,43 @@
 .container-selected-services-header h3 {
     font-size: 22px;
 }
+
+.jour{
+    font-size: 18px;
+}
+.heure{
+    
+}
+
+.container-calendrier{
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px; 
+    padding: 25px;
+    border-radius: 10px;
+    margin-top: 5px;
+    text-align: center;
+}
+
+
+.custom-btn-heure {
+    font-size: 14px;
+    height: 40px;
+    width: 90px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    border: 2px solid #dedede;
+    color: black;
+    background-color: #dedede;
+    border-radius: 5px;
+    margin-left: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    margin-top: 10px;
+}
+
+
+.custom-btn-heure:hover {
+    background-color: #bababa;
+    color: #fff;
+    border: 2px solid #bababa;
+}
